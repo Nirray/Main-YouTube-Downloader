@@ -721,7 +721,7 @@ namespace NirrayYouTubeDownloader
             else
             {
                 Variables.status = 0;
-                PauseButton.Text = "Wstrzymajj";
+                PauseButton.Text = "Wstrzymaj";
                 speedimage.Visible = false;
                 speedtext.Visible = false;
                 PauseButton.Enabled = true;
