@@ -45,6 +45,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -132,11 +133,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label5.Location = new System.Drawing.Point(12, 215);
+            this.label5.Location = new System.Drawing.Point(37, 233);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(264, 13);
+            this.label5.Size = new System.Drawing.Size(193, 13);
             this.label5.TabIndex = 10;
-            this.label5.Text = "~ Nirray - Ostatnia aktualizacja: 04.08.2020 v 1.1.02";
+            this.label5.Text = "Specjalne podziękowania dla: BeHolder";
             // 
             // linkLabel4
             // 
@@ -214,7 +215,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(360, 210);
+            this.button1.Location = new System.Drawing.Point(360, 241);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(69, 23);
             this.button1.TabIndex = 15;
@@ -222,11 +223,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label6.Location = new System.Drawing.Point(12, 246);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(264, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "~ Nirray - Ostatnia aktualizacja: 19.02.2021 v 1.1.16";
+            // 
             // About_Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 237);
+            this.ClientSize = new System.Drawing.Size(441, 269);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.linkLabel5);
@@ -280,5 +292,6 @@
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.LinkLabel linkLabel5;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label6;
     }
 }

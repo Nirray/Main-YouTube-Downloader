@@ -113,6 +113,16 @@ namespace NirrayYouTubeDownloader.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_double_down_48 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-double-down-48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_ffmpeg_48 {
             get {
                 object obj = ResourceManager.GetObject("icons8-ffmpeg-48", resourceCulture);

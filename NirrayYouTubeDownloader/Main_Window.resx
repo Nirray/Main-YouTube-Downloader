@@ -132,18 +132,6 @@
   <metadata name="SelectListToDownloadFrom.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>374, 13</value>
   </metadata>
-  <metadata name="ToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>574, 13</value>
-  </metadata>
-  <data name="UserPlaylist.Text" xml:space="preserve">
-    <value>https://www.youtube.com/playlist?list=PL3oqpiGTAhFaImbL68ri6CsUjXYIsXgNC
-https://www.youtube.com/playlist?list=PLCULndnUE-_rdY0wd-_QJD5YGJsa7eiEQ
-https://www.youtube.com/playlist?list=PLqp8brgkj7WxdXJ5vG95Fqk1MxRQNt1ic
-https://www.youtube.com/playlist?list=PLiiWa3UiP4H1PlmPY1FlReILnYZ4oM4cL
-https://www.youtube.com/playlist?list=PLsoFySl1zeSdsu9-vk7joo7BN-3_QisVF
-https://www.youtube.com/playlist?list=PL46644416B2D205DA
-https://www.youtube.com/playlist?list=PL_Z38ME1CiPVdcgBJPf7w5W_AmYoNUdfI</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

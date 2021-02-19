@@ -55,6 +55,8 @@ namespace NirrayYouTubeDownloader
             public static long total_size_download = 0;
             public static long total_size_all = 0;
             public static int max_thread = 0;
+            public static int no_more_than = 999;
+            public static int bitrate = 320000;
             public static string current_title = "";
             public static string current_exten = "";
             public static string appPath = Application.StartupPath;
@@ -79,15 +81,19 @@ namespace NirrayYouTubeDownloader
                 adjustedSize,
                 SizeSuffixes[mag]);
         }
+
         private void NewWayToConvertMp3(string filename, string extension)
         {
             Variables.status = 3;
             DownloadFromDirectLink.Enabled = false;
             DownloadListButton.Enabled = false;
+            pobieranieToolStripMenuItem.Enabled = false;
             plikToolStripMenuItem.Enabled = false;
-            Action onCompleted = () =>
+            void onCompleted()
             {
+                Information_container.SelectionColor = Color.Purple;
                 Information_container.AppendText("Pomyślnie utworzono plik MP3: " + filename + ".mp3" + Environment.NewLine);
+                Information_container.SelectionColor = Color.Black;
                 if (PauseButton.Text == "Wstrzymaj")
                 {
                     Variables.status = 0;
@@ -96,7 +102,7 @@ namespace NirrayYouTubeDownloader
                 {
                     Variables.status = 3;
                 }
-                
+
                 if (Variables.status == 3)
                 {
                     downloadComplete = false;
@@ -106,9 +112,10 @@ namespace NirrayYouTubeDownloader
                     downloadComplete = true;
                 }
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; //true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
-            };
+            }
 
             var thread = new Thread(
               async () =>
@@ -123,10 +130,14 @@ namespace NirrayYouTubeDownloader
                           Directory.CreateDirectory(folderpath);
                       }
                       string outp = Path.Combine(Variables.appPath, "download", "mp3", filename + ".mp3");
+                      if (!File.Exists(filePath))
+                      {
+                          return;
+                      }
                       IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(filePath);
                       IStream audioStream = mediaInfo.AudioStreams.FirstOrDefault()
                           ?.SetCodec(AudioCodec.mp3)
-                          ?.SetBitrate(192000);
+                          ?.SetBitrate(Variables.bitrate);
 
                       if (File.Exists(outp))
                       {
@@ -140,12 +151,24 @@ namespace NirrayYouTubeDownloader
                               .Start();
                       }
                   }
+                  catch (InvalidOperationException)
+                  {
+                      //
+                  }
                   finally
                   {
-                      onCompleted();
+                      try
+                      {
+                          onCompleted();
+                      }
+                      catch (InvalidOperationException)
+                      {
+                          // do nothing
+                      }
                   }
               });
             thread.Start();
+            
         }
 
         private void CreateMainDirectory(string directory)
@@ -170,25 +193,34 @@ namespace NirrayYouTubeDownloader
                 {
                     Application.DoEvents();
                 }
+                while (Variables.max_thread >= Variables.no_more_than)
+                {
+                    Application.DoEvents();
+                }
                 while (Variables.status == 3)
                 {
                     Application.DoEvents();
                 }
+                pobieranieToolStripMenuItem.Enabled = false;
                 plikToolStripMenuItem.Enabled = false;
                 CreateMainDirectory(Variables.appPath);
                 CookieWebClient client = new CookieWebClient();
+
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(Client_DownloadFileCompleted);
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
                 var youtube = new YoutubeClient();
+                
                 var video = await youtube.Videos.GetAsync(url);
                 var video_id = video.Id;
+                
                 string title = video.Title;
                 client.QueryString.Add("title", title);
                 string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
                 Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
                 title = r.Replace(title, "");
+
                 Variables.current_title = title;
                 Progress_text.Text = "Sprawdzanie: " + title;
                 var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video_id);
@@ -196,10 +228,13 @@ namespace NirrayYouTubeDownloader
                 Variables.max_thread += 1;
                 backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
                 DateTime localDate = DateTime.Now;
+                
                 if (streamInfo != null)
                 {
                     Variables.current_exten = streamInfo.Container.ToString();
                     string path = Path.Combine(Variables.appPath, "download\\" + streamInfo.Container + "\\" + title + "." + streamInfo.Container);
+                    client.QueryString.Add("extension", streamInfo.Container.ToString());
+                    client.QueryString.Add("can_convert", "yes");
                     if (ToolBox_DoNotDownloadAlready.Checked == true && File.Exists(path))
                     {
                         var length = new FileInfo(path).Length;
@@ -213,8 +248,10 @@ namespace NirrayYouTubeDownloader
                         }
                         else
                         {
+                            client.QueryString.Add("extension", streamInfo.Container.ToString());
                             DownloadFromDirectLink.Enabled = true;
-                            DownloadListButton.Enabled = true;
+                            DownloadListButton.Enabled = false; // true
+                            pobieranieToolStripMenuItem.Enabled = true;
                             plikToolStripMenuItem.Enabled = true;
                             Variables.left += 1;
                             Variables.can_download += 1;
@@ -234,7 +271,7 @@ namespace NirrayYouTubeDownloader
                     }
                 }             
                 Information_container.AppendText("[" + localDate + "]" + " > " + title + Environment.NewLine);
-                if (speedDownloadToolStripMenuItem.Checked == true)
+                if (speedimage.Visible == true)
                 {
                     downloadComplete = true;
                 }
@@ -253,7 +290,8 @@ namespace NirrayYouTubeDownloader
             {
                 Progress_text.Text = "Nie można zapisać pliku. Uruchom program jako administrator.";
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; // true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
@@ -265,7 +303,8 @@ namespace NirrayYouTubeDownloader
             {
                 Progress_text.Text = "Wystąpił błąd przy próbie pozyskania danych bezprośrednio w aplikacji.";
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; // true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
@@ -277,12 +316,14 @@ namespace NirrayYouTubeDownloader
             {
                 DateTime localDate = DateTime.Now;
                 Information_container.Select(Information_container.TextLength, 0);
-                Information_container.SelectionColor = Color.Red;
+                Information_container.SelectionColor = Color.Orange;
                 Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "Ten film nie jest dostępny w Twoim kraju." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
                 Progress_text.Text = "Ten film nie jest dostępny w Twoim kraju.";
+
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; // true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
@@ -299,7 +340,8 @@ namespace NirrayYouTubeDownloader
                 Information_container.SelectionColor = Color.Black;
                 Progress_text.Text = "Nie można pobrać tego pliku z tego adresu IP.";
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; // true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
@@ -317,7 +359,8 @@ namespace NirrayYouTubeDownloader
                 Information_container.AppendText(e.ToString());
                 Progress_text.Text = "Wystąpił błąd przy próbie pozyskania zawartości bezpośrednio z YouTube.";
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; // true
+                pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
@@ -329,7 +372,9 @@ namespace NirrayYouTubeDownloader
         }
         void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            string title = ((WebClient)(sender)).QueryString["title"];
+            string title = ((System.Net.WebClient)(sender)).QueryString["title"];
+            string convert = ((System.Net.WebClient)(sender)).QueryString["can_convert"];
+            string extension = ((System.Net.WebClient)(sender)).QueryString["extension"];
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
             Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             title = r.Replace(title, "");
@@ -341,12 +386,15 @@ namespace NirrayYouTubeDownloader
                 progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
+                pobieranieToolStripMenuItem.Enabled = false;
                 plikToolStripMenuItem.Enabled = false;
             });
         }
         void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string title = ((System.Net.WebClient)(sender)).QueryString["title"];
+            string convert = ((System.Net.WebClient)(sender)).QueryString["can_convert"];
+            string extension = ((System.Net.WebClient)(sender)).QueryString["extension"];
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
             Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             title = r.Replace(title, "");
@@ -361,20 +409,22 @@ namespace NirrayYouTubeDownloader
                 Information_container.SelectionColor = Color.Black;
                 progressBar1.Value = 100;
             });
-            if (ToolBox_ConvertToMp3.Checked == true)
+            if (ToolBox_ConvertToMp3.Checked == true && convert.Equals("yes"))
             {
                 string latest_ext = Variables.current_exten;
-                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > konwertowanie do MP3." + Environment.NewLine);
-                NewWayToConvertMp3(title, latest_ext);
+                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > konwertowanie do MP3 w toku." + Environment.NewLine);
+                NewWayToConvertMp3(title, extension);
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
                 plikToolStripMenuItem.Enabled = false;
+                pobieranieToolStripMenuItem.Enabled = false;
             }
             else
             {
                 DownloadFromDirectLink.Enabled = true;
-                DownloadListButton.Enabled = true;
+                DownloadListButton.Enabled = false; //true
                 plikToolStripMenuItem.Enabled = true;
+                pobieranieToolStripMenuItem.Enabled = true;
             }
             Variables.left += 1;
             Variables.can_download += 1;
@@ -393,60 +443,108 @@ namespace NirrayYouTubeDownloader
         }
         private async void CreateBigList(string[] lista_linkow_z_playlistami)
         {
-            var total = 0;
-
-            List<string> result = new List<string>();
-            foreach (var playlist_link in lista_linkow_z_playlistami)
+            if (AlternativeParser.Checked == false)
             {
-                var youtube = new YoutubeClient();
-                var playlist_metadata = await youtube.Playlists.GetAsync(playlist_link);
-                var playlist = await youtube.Playlists.GetAsync(playlist_metadata.Id);
-                var title = playlist.Title;
-                string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-                Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-                title = r.Replace(title, "");
-                var playlistVideos = await youtube.Playlists.GetVideosAsync(playlist.Id);
-                
-                foreach (var url in playlistVideos)
+                var total = 0;
+
+                List<string> result = new List<string>();
+                foreach (var playlist_link in lista_linkow_z_playlistami)
                 {
-                    if (countPlaylistDiscSpaceToolStripMenuItem.Checked == true)
+                    var youtube = new YoutubeClient();
+                    var playlist_metadata = await youtube.Playlists.GetAsync(playlist_link);
+                    var playlist = await youtube.Playlists.GetAsync(playlist_metadata.Id);
+                    var title = playlist.Title;
+                    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                    title = r.Replace(title, "");
+                    var playlistVideos = await youtube.Playlists.GetVideosAsync(playlist.Id);
+
+                    foreach (var url in playlistVideos)
                     {
-                        try
+                        if (countPlaylistDiscSpaceToolStripMenuItem.Checked == true)
                         {
-                            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(url.Id);
-                            var streamInfo = streamManifest.GetAudioOnly().WithHighestBitrate();
-                            if (streamInfo != null)
+                            try
                             {
-                                Variables.total_size_all += streamInfo.Size.TotalBytes;
-                                maxsizeof.Text = "Rozmiar: " + SizeSuffix(Variables.total_size_all).ToString();
+                                var streamManifest = await youtube.Videos.Streams.GetManifestAsync(url.Id);
+                                var streamInfo = streamManifest.GetAudioOnly().WithHighestBitrate();
+                                if (streamInfo != null)
+                                {
+                                    Variables.total_size_all += streamInfo.Size.TotalBytes;
+                                    maxsizeof.Text = "Rozmiar: " + SizeSuffix(Variables.total_size_all).ToString();
+                                }
+                            }
+                            catch (YoutubeExplode.Exceptions.VideoUnplayableException)
+                            {
+                                //
+                            }
+                            catch (Exception)
+                            {
+
                             }
                         }
-                        catch (YoutubeExplode.Exceptions.VideoUnplayableException)
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.Black;
+                        result.Add(url.Url);
+                        total += 1;
+                    }
+                    Information_container.SelectionColor = Color.DarkGreen;
+                    Information_container.AppendText("Nowa playlista!" + Environment.NewLine);
+                    Information_container.SelectionColor = Color.Black;
+                }
+                downloadComplete = true;
+                string[] new_playlist = result.ToArray();
+                Information_container.SelectionColor = Color.DarkGreen;
+                Information_container.AppendText("Rozmiar połączonej playlisty: " + total.ToString() + Environment.NewLine);
+                Information_container.SelectionColor = Color.Black;
+                Variables.total = total.ToString();
+                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                foreach (var url in new_playlist)
+                {
+                    await Task.Run(() => StartDownloadAsync(url));
+                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                }
+            }
+            else
+            {
+                List<string> result = new List<string>();
+                foreach (var playlist_link in lista_linkow_z_playlistami)
+                {
+                    Information_container.AppendText(Environment.NewLine);
+                    Information_container.AppendText("Link do playlisty: " + playlist_link);
+                    Information_container.AppendText(Environment.NewLine);
+                    using (CookieWebClient client = new CookieWebClient())
+                    {
+                        string htmlCode = client.DownloadString(playlist_link);
+                        //Information_container.AppendText(htmlCode);
+                        // foreach (Match match in Regex.Matches(htmlCode, "\"(?:videoId)([^\"]*)\"")) working regex to find videoId
+                        string nirray_parse_youtubeID = "";
+                        int total = 0;
+                        foreach (Match match in Regex.Matches(htmlCode, "(?:\"videoId)\":\"..........."))
                         {
-                            //
-                        }
-                        catch (Exception)
-                        {
-
+                            total += 1;
+                            Information_container.AppendText(total.ToString() + ". https://www.youtube.com/watch?v=");
+                            nirray_parse_youtubeID = match.ToString();
+                            nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
+                            Information_container.AppendText(nirray_parse_youtubeID);
+                            Information_container.AppendText(Environment.NewLine);
+                            downloadComplete = true;
+                            result.Add("https://www.youtube.com/watch?v=" + nirray_parse_youtubeID);
+                            //await Task.Run(() => StartDownloadAsync("https://www.youtube.com/watch?v="+ nirray_parse_youtubeID));
+                            //counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
                         }
                     }
-                    Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
-                    Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
-                    result.Add(url.Url);
-                    total += 1;
                 }
-                
-                Information_container.AppendText("Nowa playlista!" + Environment.NewLine);
-            }
-            downloadComplete = true;
-            string[] new_playlist = result.ToArray();
-            Information_container.AppendText("Rozmiar połączonej playlisty: " + total.ToString() + Environment.NewLine);
-            Variables.total = total.ToString();
-            counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-            foreach (var url in new_playlist)
-            {
-                await Task.Run(() => StartDownloadAsync(url));
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                List<string> uniqueList = result.Distinct().ToList();
+                string[] new_playlist = uniqueList.ToArray();
+                downloadComplete = true;
+                foreach (var url in new_playlist)
+                {
+                    await Task.Run(() => StartDownloadAsync(url));
+                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                }
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -473,6 +571,7 @@ namespace NirrayYouTubeDownloader
             DownloadFromDirectLink.Enabled = false;
             DownloadListButton.Enabled = false;
             plikToolStripMenuItem.Enabled = false;
+            pobieranieToolStripMenuItem.Enabled = false;
             counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
             Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
             Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
@@ -488,32 +587,74 @@ namespace NirrayYouTubeDownloader
 
         private async void RunDownloadForPlaylist(string playlist_url)
         {
-            var youtube = new YoutubeClient();
-            var playlist_metadata = await youtube.Playlists.GetAsync(playlist_url);
-            var playlist = await youtube.Playlists.GetAsync(playlist_metadata.Id);
-            var title = playlist.Title;
-            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-            title = r.Replace(title, "");
-            var playlistVideos = await youtube.Playlists.GetVideosAsync(playlist.Id);
-            List<string> temp_playlist = new List<string>();
-            
-            foreach (var url in playlistVideos)
+            if (AlternativeParser.Checked == false)
             {
-                Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
-                Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
-                temp_playlist.Add(url.Url);
-            }
-            downloadComplete = true;
-            string[] new_playlist = temp_playlist.ToArray();
-            Variables.total = new_playlist.Length.ToString();
-            counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-            foreach (var url in new_playlist)
-            {
-                await Task.Run(() => StartDownloadAsync(url));
+                var youtube = new YoutubeClient();
+                var playlist_metadata = await youtube.Playlists.GetAsync(playlist_url);
+                var playlist = await youtube.Playlists.GetAsync(playlist_metadata.Id);
+                var title = playlist.Title;
+                string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                title = r.Replace(title, "");
+                var playlistVideos = await youtube.Playlists.GetVideosAsync(playlist.Id);
+                List<string> temp_playlist = new List<string>();
+
+                foreach (var url in playlistVideos)
+                {
+                    Information_container.SelectionColor = Color.DarkGreen;
+                    Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
+                    Information_container.SelectionColor = Color.DarkGreen;
+                    Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
+                    Information_container.SelectionColor = Color.Black;
+                    temp_playlist.Add(url.Url);
+                }
+                downloadComplete = true;
+                string[] new_playlist2 = temp_playlist.ToArray();
+                Variables.total = new_playlist2.Length.ToString();
                 counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                foreach (var url in new_playlist2)
+                {
+                    await Task.Run(() => StartDownloadAsync(url));
+                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                }
             }
+            else
+            {
+                List<string> result = new List<string>();
+                using (CookieWebClient client = new CookieWebClient())
+                {
+                    string htmlCode = client.DownloadString(DirectUrlContainer.Text);
+                    //Information_container.AppendText(htmlCode);
+                    // foreach (Match match in Regex.Matches(htmlCode, "\"(?:videoId)([^\"]*)\"")) working regex to find videoId
+                    string nirray_parse_youtubeID = "";
+                    int total = 0;
+                    foreach (Match match in Regex.Matches(htmlCode, "(?:\"videoId)\":\"..........."))
+                    {
+                        total += 1;
+                        Information_container.AppendText(total.ToString() + ". https://www.youtube.com/watch?v=");
+                        nirray_parse_youtubeID = match.ToString();
+                        nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
+                        Information_container.AppendText(nirray_parse_youtubeID);
+                        Information_container.AppendText(Environment.NewLine);
+                        downloadComplete = true;
+                        result.Add("https://www.youtube.com/watch?v=" + nirray_parse_youtubeID);
+                        //await Task.Run(() => StartDownloadAsync("https://www.youtube.com/watch?v="+ nirray_parse_youtubeID));
+                        //counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                    }
+                }
+                List<string> uniqueList = result.Distinct().ToList();
+                string[] new_playlist = uniqueList.ToArray();
+                downloadComplete = true;
+                foreach (var url in new_playlist)
+                {
+                    await Task.Run(() => StartDownloadAsync(url));
+                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                }
+            }
+            
+        
         }
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         private void DownloadFromDirectLink_Click(object sender, EventArgs e)
         {
@@ -534,8 +675,10 @@ namespace NirrayYouTubeDownloader
                     {
                         Variables.total = "0";
                         Variables.left = 0;
+                        pobieranieToolStripMenuItem.Enabled = false;
                         DownloadFromDirectLink.Enabled = false;
                         DownloadListButton.Enabled = false;
+                        pobieranieToolStripMenuItem.Enabled = false;
                         plikToolStripMenuItem.Enabled = false;
                         RunDownloadForPlaylist(url);
 
@@ -544,10 +687,15 @@ namespace NirrayYouTubeDownloader
                     {
                         Variables.total = "0";
                         Variables.left = 0;
+                        pobieranieToolStripMenuItem.Enabled = false;
                         DownloadFromDirectLink.Enabled = false;
                         DownloadListButton.Enabled = false;
+                        pobieranieToolStripMenuItem.Enabled = false;
                         plikToolStripMenuItem.Enabled = false;
                         downloadComplete = true;
+                        Information_container.AppendText(Environment.NewLine);
+                        Information_container.AppendText(url.ToString());
+                        Information_container.AppendText(Environment.NewLine);
                         StartDownloadAsync(url);
                     }
                 }
@@ -568,6 +716,7 @@ namespace NirrayYouTubeDownloader
                 {
                 }
             }
+
         }
 
         private void ToolBox_NewLocation_Click(object sender, EventArgs e)
@@ -671,11 +820,6 @@ namespace NirrayYouTubeDownloader
             }
         }
 
-        private void speedDownloadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void Information_container_DoubleClick(object sender, EventArgs e)
         {
             Clipboard.SetText(Information_container.Text);
@@ -708,32 +852,296 @@ namespace NirrayYouTubeDownloader
 
         private void turboNoLimitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
+            Variables.no_more_than = 999;
             if (turboNoLimitToolStripMenuItem.Checked == true)
             {
-                Variables.status = 0;
-                PauseButton.Text = "Wstrzymaj";
-                speedimage.Visible = true;
-                speedtext.Visible = true;
-                PauseButton.Enabled = false;
-                ToolBox_ConvertToMp3.Checked = false;
-                ToolBox_ConvertToMp3.Enabled = false;
+                DisableAll();
+                turboNoLimitToolStripMenuItem.Checked = true;
+                EnableSpeedo(true);
             }
             else
             {
+                DisableAll();
+                EnableSpeedo(false);
+
+            }
+        }
+        public void EnableSpeedo(bool variable)
+        {
+            if (variable)
+            {
                 Variables.status = 0;
                 PauseButton.Text = "Wstrzymaj";
+                speedDownloadToolStripMenuItem.Checked = true;
+                ToolBox_ConvertToMp3.Enabled = false;
+                speedimage.Visible = true;
+                speedtext.Visible = true;
+                PauseButton.Enabled = false;
+            }
+            else
+            {
+                ToolBox_ConvertToMp3.Enabled = true;
+                speedDownloadToolStripMenuItem.Checked = false;
                 speedimage.Visible = false;
                 speedtext.Visible = false;
                 PauseButton.Enabled = true;
-                ToolBox_ConvertToMp3.Checked = true;
-                ToolBox_ConvertToMp3.Enabled = true;
+            }
+        }
+        private void twenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (twenToolStripMenuItem.Checked == true)
+            {
+                DisableAll();
+                twenToolStripMenuItem.Checked = true;
+                Variables.no_more_than = 20;
+                EnableSpeedo(true);
+            }
+            else
+            {
+                DisableAll();
+                Variables.no_more_than = 999;
+                EnableSpeedo(false);
+            }
+        }
+        public void DisableAll()
+        {
+            ToolBox_ConvertToMp3.Checked = false;
+            ToolBox_ConvertToMp3.Enabled = false;
+            DisableAllBitrate();
+            turboNoLimitToolStripMenuItem.Checked = false;
+            toolStripMenuItem2.Checked = false;
+            tenToolStripMenuItem.Checked = false;
+            twenToolStripMenuItem.Checked = false;
+            thirToolStripMenuItem.Checked = false;
+        }
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItem2.Checked == true)
+            {
+                DisableAll();
+                toolStripMenuItem2.Checked = true;
+                Variables.no_more_than = 5;
+                EnableSpeedo(true);
+            }
+            else
+            {
+                DisableAll();
+                Variables.no_more_than = 999;
+                EnableSpeedo(false);
+            }
+            
+        }
+
+        private void tenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tenToolStripMenuItem.Checked == true)
+            {
+                DisableAll();
+                tenToolStripMenuItem.Checked = true;
+                Variables.no_more_than = 10;
+                EnableSpeedo(true);
+            }
+            else
+            {
+                DisableAll();
+                Variables.no_more_than = 999;
+                EnableSpeedo(false);
             }
         }
 
-        private void twenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void thirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (thirToolStripMenuItem.Checked == true)
+            {
+                DisableAll();
+                thirToolStripMenuItem.Checked = true;
+                Variables.no_more_than = 30;
+                EnableSpeedo(true);
+            }
+            else
+            {
+                DisableAll();
+                Variables.no_more_than = 999;
+                EnableSpeedo(false);
+            }
+        }
+        public void DisableAllBitrate()
+        {
+            mp3_32kb.Checked = false;
+            mp3_96kb.Checked = false;
+            mp3_128kb.Checked = false;
+            mp3_160kb.Checked = false;
+            mp3_192kb.Checked = false;
+            mp3_224kb.Checked = false;
+            mp3_256kb.Checked = false;
+            mp3_272kb.Checked = false;
+            mp3_always_best.Checked = false;
+            ToolBox_ConvertToMp3.Checked = false;
+        }
+        private void Mp3_always_best_Click(object sender, EventArgs e)
+        {
+            if (mp3_always_best.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_always_best.Checked = true;
+                Variables.bitrate = 320000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_32kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_32kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_32kb.Checked = true;
+                Variables.bitrate = 32000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_96kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_96kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_96kb.Checked = true;
+                Variables.bitrate = 96000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_128kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_128kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_128kb.Checked = true;
+                Variables.bitrate = 128000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_160kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_160kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_160kb.Checked = true;
+                Variables.bitrate = 160000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_192kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_192kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_192kb.Checked = true;
+                Variables.bitrate = 192000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_256kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_256kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_256kb.Checked = true;
+                Variables.bitrate = 256000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_272kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_272kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_272kb.Checked = true;
+                Variables.bitrate = 272000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void mp3_224kb_Click(object sender, EventArgs e)
+        {
+            if (mp3_224kb.Checked == true)
+            {
+                DisableAllBitrate();
+                ToolBox_ConvertToMp3.Checked = true;
+                mp3_224kb.Checked = true;
+                Variables.bitrate = 224000;
+            }
+            else
+            {
+                DisableAllBitrate();
+            }
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            Information_container.SelectionStart = Information_container.Text.Length;
+            // scroll it automatically
+            Information_container.ScrollToCaret();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
         {
 
+            using (CookieWebClient client = new CookieWebClient())
+            {
+                string htmlCode = client.DownloadString(UserPlaylist.Text);
+                //Information_container.AppendText(htmlCode);
+                // foreach (Match match in Regex.Matches(htmlCode, "\"(?:videoId)([^\"]*)\"")) working regex to find videoId
+                string nirray_parse_youtubeID = "";
+                foreach (Match match in Regex.Matches(htmlCode, "(?:\"videoId)\":\"..........."))
+                {
+                    Information_container.AppendText("https://www.youtube.com/watch?v=");
+                    nirray_parse_youtubeID = match.ToString();
+                    nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
+                    Information_container.AppendText(nirray_parse_youtubeID);
+                    Information_container.AppendText(Environment.NewLine);
+                }
+            }
         }
+
+        
     }
     
 }
