@@ -82,8 +82,8 @@
     <Reference Include="AngleSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
       <HintPath>..\packages\AngleSharp.1.0.0-alpha-844\lib\net461\AngleSharp.dll</HintPath>
     </Reference>
-    <Reference Include="CliWrap, Version=3.3.0.0, Culture=neutral, PublicKeyToken=1c4a4fc2d6886e5a, processorArchitecture=MSIL">
-      <HintPath>..\packages\CliWrap.3.3.0\lib\net461\CliWrap.dll</HintPath>
+    <Reference Include="CliWrap, Version=3.3.1.0, Culture=neutral, PublicKeyToken=1c4a4fc2d6886e5a, processorArchitecture=MSIL">
+      <HintPath>..\packages\CliWrap.3.3.1\lib\net461\CliWrap.dll</HintPath>
     </Reference>
     <Reference Include="libvideo, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,8 +140,8 @@
     <Reference Include="Xabe.FFmpeg, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xabe.FFmpeg.4.4.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeExplode, Version=5.1.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YoutubeExplode.5.1.9\lib\net461\YoutubeExplode.dll</HintPath>
+    <Reference Include="YoutubeExplode, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YoutubeExplode.6.0.0-alpha\lib\net461\YoutubeExplode.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +150,12 @@
     </Compile>
     <Compile Include="About_window.Designer.cs">
       <DependentUpon>About_window.cs</DependentUpon>
+    </Compile>
+    <Compile Include="About_window_ENG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About_window_ENG.Designer.cs">
+      <DependentUpon>About_window_ENG.cs</DependentUpon>
     </Compile>
     <Compile Include="Main_Window.cs">
       <SubType>Form</SubType>
@@ -161,6 +167,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="About_window.resx">
       <DependentUpon>About_window.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About_window_ENG.resx">
+      <DependentUpon>About_window_ENG.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main_Window.resx">
       <DependentUpon>Main_Window.cs</DependentUpon>
@@ -209,6 +218,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon_Tx0_icon.ico" />
+    <None Include="Resources\english_language_clip_art_14749.jpg" />
+    <None Include="Resources\polish-flag-small.png" />
     <None Include="Resources\icons8-double-down-48.png" />
     <None Include="Resources\runer-silhouette-running-fast.png" />
     <None Include="Resources\translate.png" />

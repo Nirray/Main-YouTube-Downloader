@@ -55,6 +55,31 @@
             this.pobieranieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolBox_DoNotDownloadAlready = new System.Windows.Forms.ToolStripMenuItem();
             this.countPlaylistDiscSpaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alternativeSquadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pomocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.informacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.GitHubError = new System.Windows.Forms.ToolStripMenuItem();
+            this.NewSavePath = new System.Windows.Forms.FolderBrowserDialog();
+            this.SelectListToDownloadFrom = new System.Windows.Forms.OpenFileDialog();
+            this.Cannot_download_text = new System.Windows.Forms.Label();
+            this.Can_download_text = new System.Windows.Forms.Label();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.PauseButton = new System.Windows.Forms.Button();
+            this.UserPlaylist = new System.Windows.Forms.RichTextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Checkbox_UseCombine = new System.Windows.Forms.CheckBox();
+            this.Checkbox_UseUrl = new System.Windows.Forms.CheckBox();
+            this.maxsizeof = new System.Windows.Forms.Label();
+            this.backgroundthreads = new System.Windows.Forms.Label();
+            this.whatsize = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.speedtext = new System.Windows.Forms.Label();
+            this.speedimage = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.speedDownloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.turboNoLimitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,42 +90,19 @@
             this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Lang_Polish = new System.Windows.Forms.ToolStripMenuItem();
             this.Lang_English = new System.Windows.Forms.ToolStripMenuItem();
-            this.pomocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.informacjeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.GitHubError = new System.Windows.Forms.ToolStripMenuItem();
-            this.NewSavePath = new System.Windows.Forms.FolderBrowserDialog();
-            this.SelectListToDownloadFrom = new System.Windows.Forms.OpenFileDialog();
-            this.Cannot_download_text = new System.Windows.Forms.Label();
-            this.Can_download_text = new System.Windows.Forms.Label();
-            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.PauseButton = new System.Windows.Forms.Button();
-            this.speedimage = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.AlternativeParser = new System.Windows.Forms.CheckBox();
-            this.UserPlaylist = new System.Windows.Forms.RichTextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.maxsizeof = new System.Windows.Forms.Label();
-            this.backgroundthreads = new System.Windows.Forms.Label();
-            this.whatsize = new System.Windows.Forms.Label();
-            this.Checkbox_UseCombine = new System.Windows.Forms.CheckBox();
-            this.Checkbox_UseUrl = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.speedtext = new System.Windows.Forms.Label();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.speedimage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // DownloadListButton
@@ -120,14 +122,16 @@
             this.Information_container.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Information_container.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.Information_container.BackColor = System.Drawing.SystemColors.Menu;
             this.Information_container.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Information_container.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.Information_container.Location = new System.Drawing.Point(0, 235);
+            this.Information_container.DetectUrls = false;
+            this.Information_container.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.Information_container.Location = new System.Drawing.Point(48, 15);
             this.Information_container.Name = "Information_container";
             this.Information_container.ReadOnly = true;
             this.Information_container.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.Information_container.Size = new System.Drawing.Size(784, 86);
+            this.Information_container.Size = new System.Drawing.Size(760, 56);
             this.Information_container.TabIndex = 8;
             this.Information_container.Text = "";
             this.Information_container.TextChanged += new System.EventHandler(this.Information_container_TextChanged);
@@ -146,6 +150,7 @@
             // 
             this.counter.AutoSize = true;
             this.counter.BackColor = System.Drawing.SystemColors.Control;
+            this.counter.ForeColor = System.Drawing.SystemColors.WindowText;
             this.counter.Location = new System.Drawing.Point(28, 23);
             this.counter.Name = "counter";
             this.counter.Size = new System.Drawing.Size(53, 13);
@@ -176,7 +181,7 @@
             // 
             this.DirectUrlContainer.Location = new System.Drawing.Point(9, 43);
             this.DirectUrlContainer.Name = "DirectUrlContainer";
-            this.DirectUrlContainer.Size = new System.Drawing.Size(562, 21);
+            this.DirectUrlContainer.Size = new System.Drawing.Size(540, 21);
             this.DirectUrlContainer.TabIndex = 5;
             this.DirectUrlContainer.Text = "https://www.youtube.com/watch?v=pxikqLzKZDY&list=PLy_wKxVmWb4b1efRCOFzax3JQrRj2VW" +
     "fH&index=1";
@@ -330,7 +335,8 @@
             this.pobieranieToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ToolBox_DoNotDownloadAlready,
             this.countPlaylistDiscSpaceToolStripMenuItem,
-            this.speedDownloadToolStripMenuItem});
+            this.speedDownloadToolStripMenuItem,
+            this.alternativeSquadToolStripMenuItem});
             this.pobieranieToolStripMenuItem.Name = "pobieranieToolStripMenuItem";
             this.pobieranieToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.pobieranieToolStripMenuItem.Text = "Pobieranie";
@@ -341,7 +347,7 @@
             this.ToolBox_DoNotDownloadAlready.CheckOnClick = true;
             this.ToolBox_DoNotDownloadAlready.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ToolBox_DoNotDownloadAlready.Name = "ToolBox_DoNotDownloadAlready";
-            this.ToolBox_DoNotDownloadAlready.Size = new System.Drawing.Size(239, 22);
+            this.ToolBox_DoNotDownloadAlready.Size = new System.Drawing.Size(339, 22);
             this.ToolBox_DoNotDownloadAlready.Text = "Nie pobieraj istniejących już plików";
             // 
             // countPlaylistDiscSpaceToolStripMenuItem
@@ -350,96 +356,17 @@
             this.countPlaylistDiscSpaceToolStripMenuItem.CheckOnClick = true;
             this.countPlaylistDiscSpaceToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.countPlaylistDiscSpaceToolStripMenuItem.Name = "countPlaylistDiscSpaceToolStripMenuItem";
-            this.countPlaylistDiscSpaceToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.countPlaylistDiscSpaceToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.countPlaylistDiscSpaceToolStripMenuItem.Text = "Przelicz rozmiar przed pobraniem";
             this.countPlaylistDiscSpaceToolStripMenuItem.Click += new System.EventHandler(this.countPlaylistDiscSpaceToolStripMenuItem_Click);
             // 
-            // speedDownloadToolStripMenuItem
+            // alternativeSquadToolStripMenuItem
             // 
-            this.speedDownloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.turboNoLimitToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.tenToolStripMenuItem,
-            this.twenToolStripMenuItem,
-            this.thirToolStripMenuItem,
-            this.własneUstawieniaToolStripMenuItem});
-            this.speedDownloadToolStripMenuItem.Name = "speedDownloadToolStripMenuItem";
-            this.speedDownloadToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.speedDownloadToolStripMenuItem.Text = "Szybkie pobieranie";
-            // 
-            // turboNoLimitToolStripMenuItem
-            // 
-            this.turboNoLimitToolStripMenuItem.CheckOnClick = true;
-            this.turboNoLimitToolStripMenuItem.Name = "turboNoLimitToolStripMenuItem";
-            this.turboNoLimitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.turboNoLimitToolStripMenuItem.Text = "Bez limitu";
-            this.turboNoLimitToolStripMenuItem.Click += new System.EventHandler(this.turboNoLimitToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.CheckOnClick = true;
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 22);
-            this.toolStripMenuItem2.Text = "5 jednocześnie";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // tenToolStripMenuItem
-            // 
-            this.tenToolStripMenuItem.CheckOnClick = true;
-            this.tenToolStripMenuItem.Name = "tenToolStripMenuItem";
-            this.tenToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.tenToolStripMenuItem.Text = "10 jednocześnie";
-            this.tenToolStripMenuItem.Click += new System.EventHandler(this.tenToolStripMenuItem_Click);
-            // 
-            // twenToolStripMenuItem
-            // 
-            this.twenToolStripMenuItem.CheckOnClick = true;
-            this.twenToolStripMenuItem.Name = "twenToolStripMenuItem";
-            this.twenToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.twenToolStripMenuItem.Text = "20 jednocześnie";
-            this.twenToolStripMenuItem.Click += new System.EventHandler(this.twenToolStripMenuItem_Click);
-            // 
-            // thirToolStripMenuItem
-            // 
-            this.thirToolStripMenuItem.CheckOnClick = true;
-            this.thirToolStripMenuItem.Name = "thirToolStripMenuItem";
-            this.thirToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.thirToolStripMenuItem.Text = "30 jednocześnie";
-            this.thirToolStripMenuItem.Click += new System.EventHandler(this.thirToolStripMenuItem_Click);
-            // 
-            // własneUstawieniaToolStripMenuItem
-            // 
-            this.własneUstawieniaToolStripMenuItem.Enabled = false;
-            this.własneUstawieniaToolStripMenuItem.Name = "własneUstawieniaToolStripMenuItem";
-            this.własneUstawieniaToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.własneUstawieniaToolStripMenuItem.Text = "Własne ustawienia";
-            // 
-            // translateToolStripMenuItem
-            // 
-            this.translateToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.translateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Lang_Polish,
-            this.Lang_English});
-            this.translateToolStripMenuItem.Image = global::NirrayYouTubeDownloader.Properties.Resources.translate;
-            this.translateToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
-            this.translateToolStripMenuItem.Text = "Język";
-            // 
-            // Lang_Polish
-            // 
-            this.Lang_Polish.Checked = true;
-            this.Lang_Polish.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Lang_Polish.Name = "Lang_Polish";
-            this.Lang_Polish.Size = new System.Drawing.Size(107, 22);
-            this.Lang_Polish.Text = "Polski";
-            // 
-            // Lang_English
-            // 
-            this.Lang_English.Enabled = false;
-            this.Lang_English.Name = "Lang_English";
-            this.Lang_English.Size = new System.Drawing.Size(107, 22);
-            this.Lang_English.Text = "English";
+            this.alternativeSquadToolStripMenuItem.CheckOnClick = true;
+            this.alternativeSquadToolStripMenuItem.Name = "alternativeSquadToolStripMenuItem";
+            this.alternativeSquadToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.alternativeSquadToolStripMenuItem.Text = "Alternatywna składnia dla parsowania playlist (videoId)";
+            this.alternativeSquadToolStripMenuItem.Click += new System.EventHandler(this.alternativeSquadToolStripMenuItem_Click);
             // 
             // pomocToolStripMenuItem
             // 
@@ -516,6 +443,140 @@
             this.PauseButton.UseVisualStyleBackColor = true;
             this.PauseButton.Click += new System.EventHandler(this.PauseButton_Click);
             // 
+            // UserPlaylist
+            // 
+            this.UserPlaylist.BackColor = System.Drawing.SystemColors.Window;
+            this.UserPlaylist.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.UserPlaylist.Enabled = false;
+            this.UserPlaylist.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.UserPlaylist.Location = new System.Drawing.Point(9, 90);
+            this.UserPlaylist.Name = "UserPlaylist";
+            this.UserPlaylist.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.UserPlaylist.Size = new System.Drawing.Size(540, 90);
+            this.UserPlaylist.TabIndex = 7;
+            this.UserPlaylist.Text = "https://www.youtube.com/playlist?list=PL46644416B2D205DA\nhttps://www.youtube.com/" +
+    "playlist?list=PLFBHIu8sTMFKLxamcXnWmRmRhxWxmcsu6";
+            this.UserPlaylist.WordWrap = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.pictureBox3);
+            this.groupBox1.Controls.Add(this.counter);
+            this.groupBox1.Controls.Add(this.Cannot_download_text);
+            this.groupBox1.Controls.Add(this.Can_download_text);
+            this.groupBox1.Controls.Add(this.pictureBox1);
+            this.groupBox1.Controls.Add(this.pictureBox2);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox1.Location = new System.Drawing.Point(12, 31);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(183, 86);
+            this.groupBox1.TabIndex = 20;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Stan";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.Checkbox_UseCombine);
+            this.groupBox2.Controls.Add(this.Checkbox_UseUrl);
+            this.groupBox2.Controls.Add(this.DirectUrlContainer);
+            this.groupBox2.Controls.Add(this.UserPlaylist);
+            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox2.Location = new System.Drawing.Point(201, 31);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(571, 190);
+            this.groupBox2.TabIndex = 21;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Adresy";
+            // 
+            // Checkbox_UseCombine
+            // 
+            this.Checkbox_UseCombine.AutoSize = true;
+            this.Checkbox_UseCombine.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Checkbox_UseCombine.Enabled = false;
+            this.Checkbox_UseCombine.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.Checkbox_UseCombine.Location = new System.Drawing.Point(9, 70);
+            this.Checkbox_UseCombine.Name = "Checkbox_UseCombine";
+            this.Checkbox_UseCombine.Size = new System.Drawing.Size(103, 17);
+            this.Checkbox_UseCombine.TabIndex = 6;
+            this.Checkbox_UseCombine.Text = "Połącz playlisty:";
+            this.Checkbox_UseCombine.UseVisualStyleBackColor = true;
+            this.Checkbox_UseCombine.CheckedChanged += new System.EventHandler(this.Checkbox_UseCombine_CheckedChanged);
+            // 
+            // Checkbox_UseUrl
+            // 
+            this.Checkbox_UseUrl.AutoSize = true;
+            this.Checkbox_UseUrl.Checked = true;
+            this.Checkbox_UseUrl.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Checkbox_UseUrl.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.Checkbox_UseUrl.Location = new System.Drawing.Point(9, 20);
+            this.Checkbox_UseUrl.Name = "Checkbox_UseUrl";
+            this.Checkbox_UseUrl.Size = new System.Drawing.Size(118, 17);
+            this.Checkbox_UseUrl.TabIndex = 4;
+            this.Checkbox_UseUrl.Text = "Adres do pobrania:";
+            this.Checkbox_UseUrl.UseVisualStyleBackColor = true;
+            this.Checkbox_UseUrl.CheckedChanged += new System.EventHandler(this.Checkbox_UseUrl_CheckedChanged);
+            // 
+            // maxsizeof
+            // 
+            this.maxsizeof.AutoSize = true;
+            this.maxsizeof.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.maxsizeof.Location = new System.Drawing.Point(329, 11);
+            this.maxsizeof.Name = "maxsizeof";
+            this.maxsizeof.Size = new System.Drawing.Size(49, 13);
+            this.maxsizeof.TabIndex = 10;
+            this.maxsizeof.Text = "Rozmiar:";
+            this.maxsizeof.Visible = false;
+            // 
+            // backgroundthreads
+            // 
+            this.backgroundthreads.AutoSize = true;
+            this.backgroundthreads.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.backgroundthreads.Location = new System.Drawing.Point(6, 11);
+            this.backgroundthreads.Name = "backgroundthreads";
+            this.backgroundthreads.Size = new System.Drawing.Size(81, 13);
+            this.backgroundthreads.TabIndex = 9;
+            this.backgroundthreads.Text = "Aktualnie w tle:";
+            // 
+            // whatsize
+            // 
+            this.whatsize.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.whatsize.Location = new System.Drawing.Point(672, 11);
+            this.whatsize.Name = "whatsize";
+            this.whatsize.Size = new System.Drawing.Size(60, 13);
+            this.whatsize.TabIndex = 8;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox4);
+            this.groupBox3.Controls.Add(this.pictureBox4);
+            this.groupBox3.Controls.Add(this.Information_container);
+            this.groupBox3.Location = new System.Drawing.Point(-36, 220);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(866, 148);
+            this.groupBox3.TabIndex = 22;
+            this.groupBox3.TabStop = false;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.backgroundthreads);
+            this.groupBox4.Controls.Add(this.maxsizeof);
+            this.groupBox4.Controls.Add(this.whatsize);
+            this.groupBox4.Location = new System.Drawing.Point(48, 74);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(738, 54);
+            this.groupBox4.TabIndex = 17;
+            this.groupBox4.TabStop = false;
+            // 
+            // speedtext
+            // 
+            this.speedtext.AutoSize = true;
+            this.speedtext.Location = new System.Drawing.Point(40, 207);
+            this.speedtext.Name = "speedtext";
+            this.speedtext.Size = new System.Drawing.Size(147, 13);
+            this.speedtext.TabIndex = 8;
+            this.speedtext.Text = "Szybkie pobieranie załączone";
+            this.speedtext.Visible = false;
+            // 
             // speedimage
             // 
             this.speedimage.Image = global::NirrayYouTubeDownloader.Properties.Resources.runer_silhouette_running_fast;
@@ -565,11 +626,102 @@
             this.pictureBox2.TabStop = false;
             this.ToolTip.SetToolTip(this.pictureBox2, "Wszystkie możliwe błędy");
             // 
+            // speedDownloadToolStripMenuItem
+            // 
+            this.speedDownloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.turboNoLimitToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.tenToolStripMenuItem,
+            this.twenToolStripMenuItem,
+            this.thirToolStripMenuItem,
+            this.własneUstawieniaToolStripMenuItem});
+            this.speedDownloadToolStripMenuItem.Image = global::NirrayYouTubeDownloader.Properties.Resources.runer_silhouette_running_fast;
+            this.speedDownloadToolStripMenuItem.Name = "speedDownloadToolStripMenuItem";
+            this.speedDownloadToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.speedDownloadToolStripMenuItem.Text = "Szybkie pobieranie";
+            // 
+            // turboNoLimitToolStripMenuItem
+            // 
+            this.turboNoLimitToolStripMenuItem.CheckOnClick = true;
+            this.turboNoLimitToolStripMenuItem.Name = "turboNoLimitToolStripMenuItem";
+            this.turboNoLimitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.turboNoLimitToolStripMenuItem.Text = "Bez limitu";
+            this.turboNoLimitToolStripMenuItem.Click += new System.EventHandler(this.turboNoLimitToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.CheckOnClick = true;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 22);
+            this.toolStripMenuItem2.Text = "5 jednocześnie";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // tenToolStripMenuItem
+            // 
+            this.tenToolStripMenuItem.CheckOnClick = true;
+            this.tenToolStripMenuItem.Name = "tenToolStripMenuItem";
+            this.tenToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.tenToolStripMenuItem.Text = "10 jednocześnie";
+            this.tenToolStripMenuItem.Click += new System.EventHandler(this.tenToolStripMenuItem_Click);
+            // 
+            // twenToolStripMenuItem
+            // 
+            this.twenToolStripMenuItem.CheckOnClick = true;
+            this.twenToolStripMenuItem.Name = "twenToolStripMenuItem";
+            this.twenToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.twenToolStripMenuItem.Text = "20 jednocześnie";
+            this.twenToolStripMenuItem.Click += new System.EventHandler(this.twenToolStripMenuItem_Click);
+            // 
+            // thirToolStripMenuItem
+            // 
+            this.thirToolStripMenuItem.CheckOnClick = true;
+            this.thirToolStripMenuItem.Name = "thirToolStripMenuItem";
+            this.thirToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.thirToolStripMenuItem.Text = "30 jednocześnie";
+            this.thirToolStripMenuItem.Click += new System.EventHandler(this.thirToolStripMenuItem_Click);
+            // 
+            // własneUstawieniaToolStripMenuItem
+            // 
+            this.własneUstawieniaToolStripMenuItem.Enabled = false;
+            this.własneUstawieniaToolStripMenuItem.Name = "własneUstawieniaToolStripMenuItem";
+            this.własneUstawieniaToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.własneUstawieniaToolStripMenuItem.Text = "Własne ustawienia";
+            // 
+            // translateToolStripMenuItem
+            // 
+            this.translateToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.translateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Lang_Polish,
+            this.Lang_English});
+            this.translateToolStripMenuItem.Image = global::NirrayYouTubeDownloader.Properties.Resources.translate;
+            this.translateToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.translateToolStripMenuItem.Text = "Język";
+            // 
+            // Lang_Polish
+            // 
+            this.Lang_Polish.Checked = true;
+            this.Lang_Polish.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Lang_Polish.Image = global::NirrayYouTubeDownloader.Properties.Resources.polish_flag_small;
+            this.Lang_Polish.Name = "Lang_Polish";
+            this.Lang_Polish.Size = new System.Drawing.Size(180, 22);
+            this.Lang_Polish.Text = "Polski";
+            this.Lang_Polish.Click += new System.EventHandler(this.Lang_Polish_Click);
+            // 
+            // Lang_English
+            // 
+            this.Lang_English.Image = global::NirrayYouTubeDownloader.Properties.Resources.english_language_clip_art_14749;
+            this.Lang_English.Name = "Lang_English";
+            this.Lang_English.Size = new System.Drawing.Size(180, 22);
+            this.Lang_English.Text = "English";
+            this.Lang_English.Click += new System.EventHandler(this.Lang_English_Click);
+            // 
             // pictureBox4
             // 
             this.pictureBox4.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox4.Image = global::NirrayYouTubeDownloader.Properties.Resources.icons8_double_down_48;
-            this.pictureBox4.Location = new System.Drawing.Point(553, 173);
+            this.pictureBox4.Location = new System.Drawing.Point(792, 85);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(16, 14);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -577,148 +729,6 @@
             this.pictureBox4.TabStop = false;
             this.ToolTip.SetToolTip(this.pictureBox4, "Przejdź na sam dół");
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
-            // 
-            // AlternativeParser
-            // 
-            this.AlternativeParser.AutoSize = true;
-            this.AlternativeParser.Checked = true;
-            this.AlternativeParser.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AlternativeParser.Location = new System.Drawing.Point(293, 0);
-            this.AlternativeParser.Name = "AlternativeParser";
-            this.AlternativeParser.Size = new System.Drawing.Size(276, 17);
-            this.AlternativeParser.TabIndex = 18;
-            this.AlternativeParser.Text = "Alternatywna składnia wyszukiwania videoId [BETA]";
-            this.ToolTip.SetToolTip(this.AlternativeParser, "Włącz tę opcję, jeżeli wystepują problemy z pobieraniem playlist");
-            this.AlternativeParser.UseVisualStyleBackColor = true;
-            // 
-            // UserPlaylist
-            // 
-            this.UserPlaylist.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.UserPlaylist.Enabled = false;
-            this.UserPlaylist.Location = new System.Drawing.Point(6, 93);
-            this.UserPlaylist.Name = "UserPlaylist";
-            this.UserPlaylist.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.UserPlaylist.Size = new System.Drawing.Size(565, 79);
-            this.UserPlaylist.TabIndex = 7;
-            this.UserPlaylist.Text = "https://www.youtube.com/playlist?list=PL46644416B2D205DA\nhttps://www.youtube.com/" +
-    "playlist?list=PLFBHIu8sTMFKLxamcXnWmRmRhxWxmcsu6";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.pictureBox3);
-            this.groupBox1.Controls.Add(this.counter);
-            this.groupBox1.Controls.Add(this.Cannot_download_text);
-            this.groupBox1.Controls.Add(this.Can_download_text);
-            this.groupBox1.Controls.Add(this.pictureBox1);
-            this.groupBox1.Controls.Add(this.pictureBox2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 31);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(183, 86);
-            this.groupBox1.TabIndex = 20;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Stan";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.AlternativeParser);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.pictureBox4);
-            this.groupBox2.Controls.Add(this.maxsizeof);
-            this.groupBox2.Controls.Add(this.backgroundthreads);
-            this.groupBox2.Controls.Add(this.whatsize);
-            this.groupBox2.Controls.Add(this.Checkbox_UseCombine);
-            this.groupBox2.Controls.Add(this.Checkbox_UseUrl);
-            this.groupBox2.Controls.Add(this.DirectUrlContainer);
-            this.groupBox2.Controls.Add(this.UserPlaylist);
-            this.groupBox2.Location = new System.Drawing.Point(201, 31);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(577, 190);
-            this.groupBox2.TabIndex = 21;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Adresy";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(494, 70);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 19);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // maxsizeof
-            // 
-            this.maxsizeof.AutoSize = true;
-            this.maxsizeof.Location = new System.Drawing.Point(453, 21);
-            this.maxsizeof.Name = "maxsizeof";
-            this.maxsizeof.Size = new System.Drawing.Size(49, 13);
-            this.maxsizeof.TabIndex = 10;
-            this.maxsizeof.Text = "Rozmiar:";
-            this.maxsizeof.Visible = false;
-            // 
-            // backgroundthreads
-            // 
-            this.backgroundthreads.AutoSize = true;
-            this.backgroundthreads.Location = new System.Drawing.Point(142, 21);
-            this.backgroundthreads.Name = "backgroundthreads";
-            this.backgroundthreads.Size = new System.Drawing.Size(81, 13);
-            this.backgroundthreads.TabIndex = 9;
-            this.backgroundthreads.Text = "Aktualnie w tle:";
-            // 
-            // whatsize
-            // 
-            this.whatsize.AutoSize = true;
-            this.whatsize.Location = new System.Drawing.Point(272, 21);
-            this.whatsize.Name = "whatsize";
-            this.whatsize.Size = new System.Drawing.Size(118, 13);
-            this.whatsize.TabIndex = 8;
-            this.whatsize.Text = "Przewidywany rozmiar:";
-            // 
-            // Checkbox_UseCombine
-            // 
-            this.Checkbox_UseCombine.AutoSize = true;
-            this.Checkbox_UseCombine.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Checkbox_UseCombine.Enabled = false;
-            this.Checkbox_UseCombine.Location = new System.Drawing.Point(9, 70);
-            this.Checkbox_UseCombine.Name = "Checkbox_UseCombine";
-            this.Checkbox_UseCombine.Size = new System.Drawing.Size(103, 17);
-            this.Checkbox_UseCombine.TabIndex = 6;
-            this.Checkbox_UseCombine.Text = "Połącz playlisty:";
-            this.Checkbox_UseCombine.UseVisualStyleBackColor = true;
-            this.Checkbox_UseCombine.CheckedChanged += new System.EventHandler(this.Checkbox_UseCombine_CheckedChanged);
-            // 
-            // Checkbox_UseUrl
-            // 
-            this.Checkbox_UseUrl.AutoSize = true;
-            this.Checkbox_UseUrl.Checked = true;
-            this.Checkbox_UseUrl.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Checkbox_UseUrl.Location = new System.Drawing.Point(9, 20);
-            this.Checkbox_UseUrl.Name = "Checkbox_UseUrl";
-            this.Checkbox_UseUrl.Size = new System.Drawing.Size(118, 17);
-            this.Checkbox_UseUrl.TabIndex = 4;
-            this.Checkbox_UseUrl.Text = "Adres do pobrania:";
-            this.Checkbox_UseUrl.UseVisualStyleBackColor = true;
-            this.Checkbox_UseUrl.CheckedChanged += new System.EventHandler(this.Checkbox_UseUrl_CheckedChanged);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Location = new System.Drawing.Point(-36, 220);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(866, 148);
-            this.groupBox3.TabIndex = 22;
-            this.groupBox3.TabStop = false;
-            // 
-            // speedtext
-            // 
-            this.speedtext.AutoSize = true;
-            this.speedtext.Location = new System.Drawing.Point(40, 207);
-            this.speedtext.Name = "speedtext";
-            this.speedtext.Size = new System.Drawing.Size(147, 13);
-            this.speedtext.TabIndex = 8;
-            this.speedtext.Text = "Szybkie pobieranie załączone";
-            this.speedtext.Visible = false;
             // 
             // toolStripStatusLabel1
             // 
@@ -737,7 +747,6 @@
             this.Controls.Add(this.DownloadListButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Information_container);
             this.Controls.Add(this.PauseButton);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.statusStrip1);
@@ -757,15 +766,18 @@
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.speedimage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -833,8 +845,8 @@
         private System.Windows.Forms.ToolStripMenuItem mp3_224kb;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox AlternativeParser;
+        private System.Windows.Forms.ToolStripMenuItem alternativeSquadToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox4;
     }
 }
 

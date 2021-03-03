@@ -23,32 +23,10 @@ namespace NirrayYouTubeDownloader
             InitializeComponent();
         }
         public bool downloadComplete = false;
-        public static class English
-        {
-            public static string success_mp3 = "MP3 file created successfully: ";
-            public static string wait_button = "Pause";
-        }
-        public static class Polish
-        {
-            public static string success_mp3 = "Pomyślnie utworzono plik MP3: ";
-            public static string wait_button = "Wstrzymaj";
-            public static string checking = "Sprawdzanie: ";
-            public static string bgtask = "Aktualnie w tle: ";
-            public static string fileexist = " > Plik już istnieje.";
-            public static string filebroken = " > Wygląda na to, że plik jest uszkodzony.";
-            public static string mbsize = "Przewidywany rozmiar: ";
-            public static string stage = "Stan: ";
-            public static string succes = "Pomyślnie: ";
-            public static string failed = "Niepomyślnie: ";
-            public static string missingno = "Nie można rozpocząć pobierania ponieważ brakuje potrzebnych plików aplikacji.";
-            public static string needadmin = "Nie można zapisać pliku. Uruchom program jako administrator.";
-            public static string errorocc = "Wystąpił błąd przy próbie pozyskania danych bezprośrednio w aplikacji.";
-            public static string notavail = "Ten film nie jest dostępny w Twoim kraju.";
-            public static string cannotdownload = " nie można pozyskać danych.";
-        }
         public static class Variables
         {
             public static int left = 0;
+            public static string language = "PL";
             public static int cannot_download = 0;
             public static int can_download = 0;
             public static int status = 0;
@@ -92,9 +70,12 @@ namespace NirrayYouTubeDownloader
             void onCompleted()
             {
                 Information_container.SelectionColor = Color.Purple;
-                Information_container.AppendText("Pomyślnie utworzono plik MP3: " + filename + ".mp3" + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("Pomyślnie utworzono plik MP3: " + filename + ".mp3" + Environment.NewLine);
+                else
+                    Information_container.AppendText("Successfully created MP3 file: " + filename + ".mp3" + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
-                if (PauseButton.Text == "Wstrzymaj")
+                if (PauseButton.Text == "Wstrzymaj" || PauseButton.Text == "Pause")
                 {
                     Variables.status = 0;
                 }
@@ -168,7 +149,7 @@ namespace NirrayYouTubeDownloader
                   }
               });
             thread.Start();
-            
+
         }
 
         private void CreateMainDirectory(string directory)
@@ -211,10 +192,10 @@ namespace NirrayYouTubeDownloader
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
                 var youtube = new YoutubeClient();
-                
+
                 var video = await youtube.Videos.GetAsync(url);
                 var video_id = video.Id;
-                
+
                 string title = video.Title;
                 client.QueryString.Add("title", title);
                 string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
@@ -222,13 +203,19 @@ namespace NirrayYouTubeDownloader
                 title = r.Replace(title, "");
 
                 Variables.current_title = title;
-                Progress_text.Text = "Sprawdzanie: " + title;
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Sprawdzanie: " + title;
+                else
+                    Progress_text.Text = "Checking: " + title;
                 var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video_id);
                 var streamInfo = streamManifest.GetAudioOnly().WithHighestBitrate();
                 Variables.max_thread += 1;
-                backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
+                if (Variables.language == "PL")
+                    backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
+                else
+                    backgroundthreads.Text = "Background download: " + Variables.max_thread.ToString();
                 DateTime localDate = DateTime.Now;
-                
+
                 if (streamInfo != null)
                 {
                     Variables.current_exten = streamInfo.Container.ToString();
@@ -238,12 +225,18 @@ namespace NirrayYouTubeDownloader
                     if (ToolBox_DoNotDownloadAlready.Checked == true && File.Exists(path))
                     {
                         var length = new FileInfo(path).Length;
-                        Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Plik już istnieje." + Environment.NewLine);
+                        if (Variables.language == "PL")
+                            Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Plik już istnieje." + Environment.NewLine);
+                        else
+                            Information_container.AppendText("[" + localDate + "]" + " > " + title + " > File already exists." + Environment.NewLine);
                         if (length != streamInfo.Size.TotalBytes)
                         {
-                            Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Wygląda na to, że plik jest uszkodzony." + Environment.NewLine);
+                            if (Variables.language == "PL")
+                                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Wygląda na to, że plik jest uszkodzony." + Environment.NewLine);
+                            else
+                                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Corrupted file." + Environment.NewLine);
                             Variables.total_size_download += streamInfo.Size.TotalBytes;
-                            whatsize.Text = "Przewidywany rozmiar: " + SizeSuffix(Variables.total_size_download).ToString();
+                            whatsize.Text = "" + SizeSuffix(Variables.total_size_download).ToString();
                             client.DownloadFileAsync(new Uri(streamInfo.Url), path);
                         }
                         else
@@ -256,20 +249,31 @@ namespace NirrayYouTubeDownloader
                             Variables.left += 1;
                             Variables.can_download += 1;
                             Variables.max_thread -= 1;
-                            backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
-                            counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                            Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                            Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                            if (Variables.language == "PL")
+                            {
+                                backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
+                                counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                            }
+                            else
+                            {
+                                backgroundthreads.Text = "Background download: " + Variables.max_thread.ToString();
+                                counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                                Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                                Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                            }
+                            
                             return;
                         }
                     }
                     else
                     {
                         Variables.total_size_download += streamInfo.Size.TotalBytes;
-                        whatsize.Text = "Przewidywany rozmiar: " + SizeSuffix(Variables.total_size_download).ToString();
+                        whatsize.Text = "" + SizeSuffix(Variables.total_size_download).ToString();
                         client.DownloadFileAsync(new Uri(streamInfo.Url), path);
                     }
-                }             
+                }
                 Information_container.AppendText("[" + localDate + "]" + " > " + title + Environment.NewLine);
                 if (speedimage.Visible == true)
                 {
@@ -279,47 +283,80 @@ namespace NirrayYouTubeDownloader
                 {
                     downloadComplete = false;
                 }
-                
-                
+
+
             }
             catch (FileNotFoundException)
             {
-                Progress_text.Text = "Nie można rozpocząć pobierania ponieważ brakuje potrzebnych plików aplikacji.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Nie można rozpocząć pobierania ponieważ brakuje potrzebnych plików aplikacji.";
+                else
+                    Progress_text.Text = "Download could not start because necessary application files are missing.";
             }
             catch (InvalidOperationException)
             {
-                Progress_text.Text = "Nie można zapisać pliku. Uruchom program jako administrator.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Nie można zapisać pliku. Uruchom program jako administrator.";
+                else
+                    Progress_text.Text = "File could not be saved. Run the program as administrator.";
                 DownloadFromDirectLink.Enabled = true;
                 DownloadListButton.Enabled = false; // true
                 pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                {
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
+                else
+                {
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
             }
             catch (System.Reflection.TargetInvocationException)
             {
-                Progress_text.Text = "Wystąpił błąd przy próbie pozyskania danych bezprośrednio w aplikacji.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Wystąpił błąd przy próbie pozyskania danych bezprośrednio w aplikacji.";
+                else
+                    Progress_text.Text = "An error occurred while trying to get the data directly in the app.";
                 DownloadFromDirectLink.Enabled = true;
                 DownloadListButton.Enabled = false; // true
                 pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                {
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
+                else
+                {
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
             }
             catch (YoutubeExplode.Exceptions.VideoUnplayableException)
             {
                 DateTime localDate = DateTime.Now;
                 Information_container.Select(Information_container.TextLength, 0);
                 Information_container.SelectionColor = Color.Orange;
-                Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "Ten film nie jest dostępny w Twoim kraju." + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "Ten film nie jest dostępny w Twoim kraju." + Environment.NewLine);
+                else
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "This video is not available in your country." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
-                Progress_text.Text = "Ten film nie jest dostępny w Twoim kraju.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Ten film nie jest dostępny w Twoim kraju.";
+                else
+                    Progress_text.Text = "This video is not available in your country.";
 
                 DownloadFromDirectLink.Enabled = true;
                 DownloadListButton.Enabled = false; // true
@@ -327,92 +364,156 @@ namespace NirrayYouTubeDownloader
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                {
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
+                else
+                {
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
             }
             catch (YoutubeExplode.Exceptions.RequestLimitExceededException)
             {
                 DateTime localDate = DateTime.Now;
                 Information_container.Select(Information_container.TextLength, 0);
                 Information_container.SelectionColor = Color.Red;
-                Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "Nie można pobrać tego pliku z tego adresu IP." + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "Nie można pobrać tego pliku z tego adresu IP." + Environment.NewLine);
+                else
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "File cannot be retrieved from this IP address." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
-                Progress_text.Text = "Nie można pobrać tego pliku z tego adresu IP.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Nie można pobrać tego pliku z tego adresu IP.";
+                else
+                    Progress_text.Text = "File cannot be retrieved from this IP address.";
                 DownloadFromDirectLink.Enabled = true;
                 DownloadListButton.Enabled = false; // true
                 pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                {
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
+                else
+                {
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
             }
             catch (Exception e)
             {
                 DateTime localDate = DateTime.Now;
                 Information_container.Select(Information_container.TextLength, 0);
                 Information_container.SelectionColor = Color.Red;
-                Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + " nie można pozyskać danych." + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + " nie można pozyskać danych." + Environment.NewLine);
+                else
+                    Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + " not available." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
                 Information_container.AppendText(e.ToString());
-                Progress_text.Text = "Wystąpił błąd przy próbie pozyskania zawartości bezpośrednio z YouTube.";
+                if (Variables.language == "PL")
+                    Progress_text.Text = "Wystąpił błąd przy próbie pozyskania zawartości bezpośrednio z YouTube.";
+                else
+                    Progress_text.Text = "An error occurred while trying to get content directly from YouTube.";
                 DownloadFromDirectLink.Enabled = true;
                 DownloadListButton.Enabled = false; // true
                 pobieranieToolStripMenuItem.Enabled = true;
                 plikToolStripMenuItem.Enabled = true;
                 Variables.left += 1;
                 Variables.cannot_download += 1;
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                {
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
+                else
+                {
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                    Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                    Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+                }
             }
 
         }
         void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            string title = ((System.Net.WebClient)(sender)).QueryString["title"];
-            string convert = ((System.Net.WebClient)(sender)).QueryString["can_convert"];
-            string extension = ((System.Net.WebClient)(sender)).QueryString["extension"];
+            string title = ((WebClient)(sender)).QueryString["title"];
+            string convert = ((WebClient)(sender)).QueryString["can_convert"];
+            string extension = ((WebClient)(sender)).QueryString["extension"];
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
             Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             title = r.Replace(title, "");
+            string download_text = "";
+            if (Variables.language == "PL")
+            {
+                download_text = "Pobrano: ";
+            }
+            else
+            {
+                download_text = "Downloaded: ";
+            }
             this.BeginInvoke((MethodInvoker)delegate {
-                double bytesIn = double.Parse(e.BytesReceived.ToString());
-                double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-                double percentage = bytesIn / totalBytes * 100;
-                Progress_text.Text = "(" + title + ") Pobrano: " + e.BytesReceived + " / " + e.TotalBytesToReceive + ".";
-                progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
-                DownloadFromDirectLink.Enabled = false;
-                DownloadListButton.Enabled = false;
-                pobieranieToolStripMenuItem.Enabled = false;
-                plikToolStripMenuItem.Enabled = false;
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+            Progress_text.Text = "(" + title + ") "+ download_text + e.BytesReceived + " / " + e.TotalBytesToReceive + ".";
+            progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
+            DownloadFromDirectLink.Enabled = false;
+            DownloadListButton.Enabled = false;
+            pobieranieToolStripMenuItem.Enabled = false;
+            plikToolStripMenuItem.Enabled = false;
             });
         }
         void Client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            string title = ((System.Net.WebClient)(sender)).QueryString["title"];
-            string convert = ((System.Net.WebClient)(sender)).QueryString["can_convert"];
-            string extension = ((System.Net.WebClient)(sender)).QueryString["extension"];
+            string title = ((WebClient)(sender)).QueryString["title"];
+            string convert = ((WebClient)(sender)).QueryString["can_convert"];
+            string extension = ((WebClient)(sender)).QueryString["extension"];
             string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
             Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             title = r.Replace(title, "");
             DateTime localDate = DateTime.Now;
             this.BeginInvoke((MethodInvoker)delegate {
                 Variables.max_thread -= 1;
-                backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
-                Progress_text.Text = title + " > pobieranie zakończone.";
-                Information_container.Select(Information_container.TextLength, 0);
-                Information_container.SelectionColor = Color.Green;
-                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > pomyślnie zapisano plik." + Environment.NewLine);
-                Information_container.SelectionColor = Color.Black;
-                progressBar1.Value = 100;
+                if (Variables.language == "PL")
+                {
+                    backgroundthreads.Text = "Aktualnie w tle: " + Variables.max_thread.ToString();
+                    Progress_text.Text = title + " > pobieranie zakończone.";
+                    Information_container.Select(Information_container.TextLength, 0);
+                    Information_container.SelectionColor = Color.DarkGreen;
+                    Information_container.AppendText("[" + localDate + "]" + " > " + title + " > pomyślnie zapisano plik." + Environment.NewLine);
+                    Information_container.SelectionColor = Color.Black;
+                    progressBar1.Value = 100;
+                }
+                else
+                {
+                    backgroundthreads.Text = "Background download: " + Variables.max_thread.ToString();
+                    Progress_text.Text = title + " > download complete.";
+                    Information_container.Select(Information_container.TextLength, 0);
+                    Information_container.SelectionColor = Color.DarkGreen;
+                    Information_container.AppendText("[" + localDate + "]" + " > " + title + " > successfully saved the file." + Environment.NewLine);
+                    Information_container.SelectionColor = Color.Black;
+                    progressBar1.Value = 100;
+                }
             });
             if (ToolBox_ConvertToMp3.Checked == true && convert.Equals("yes"))
             {
                 string latest_ext = Variables.current_exten;
-                Information_container.AppendText("[" + localDate + "]" + " > " + title + " > konwertowanie do MP3 w toku." + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("[" + localDate + "]" + " > " + title + " > konwertowanie do MP3 w toku." + Environment.NewLine);
+                else
+                    Information_container.AppendText("[" + localDate + "]" + " > " + title + " > converting to MP3 in progress." + Environment.NewLine);
                 NewWayToConvertMp3(title, extension);
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
@@ -428,7 +529,7 @@ namespace NirrayYouTubeDownloader
             }
             Variables.left += 1;
             Variables.can_download += 1;
-            if (PauseButton.Text == "Kontynuuj")
+            if (PauseButton.Text == "Kontynuuj" || PauseButton.Text == "Continue")
             {
                 downloadComplete = false;
             }
@@ -436,14 +537,23 @@ namespace NirrayYouTubeDownloader
             {
                 downloadComplete = true;
             }
-            counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-            Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-            Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
-            
+            if (Variables.language == "PL")
+            {
+                counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+            }
+            else
+            {
+                counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+            }
+
         }
         private async void CreateBigList(string[] lista_linkow_z_playlistami)
         {
-            if (AlternativeParser.Checked == false)
+            if (alternativeSquadToolStripMenuItem.Checked == false)
             {
                 var total = 0;
 
@@ -470,7 +580,10 @@ namespace NirrayYouTubeDownloader
                                 if (streamInfo != null)
                                 {
                                     Variables.total_size_all += streamInfo.Size.TotalBytes;
-                                    maxsizeof.Text = "Rozmiar: " + SizeSuffix(Variables.total_size_all).ToString();
+                                    if (Variables.language == "PL")
+                                        maxsizeof.Text = "Rozmiar: " + SizeSuffix(Variables.total_size_all).ToString();
+                                    else
+                                        maxsizeof.Text = "Size: " + SizeSuffix(Variables.total_size_all).ToString();
                                 }
                             }
                             catch (YoutubeExplode.Exceptions.VideoUnplayableException)
@@ -482,29 +595,53 @@ namespace NirrayYouTubeDownloader
 
                             }
                         }
-                        Information_container.SelectionColor = Color.DarkGreen;
-                        Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
-                        Information_container.SelectionColor = Color.DarkGreen;
-                        Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
-                        Information_container.SelectionColor = Color.Black;
+                        if (Variables.language == "PL")
+                        {
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
+                            Information_container.SelectionColor = Color.Black;
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("Nowa playlista!" + Environment.NewLine);
+                            Information_container.SelectionColor = Color.Black;
+                        }
+                        else
+                        {
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("[" + url.Title + "]" + " > Playlist." + Environment.NewLine);
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("[" + url.Url + "]" + " > Playlist." + Environment.NewLine);
+                            Information_container.SelectionColor = Color.Black;
+                            Information_container.SelectionColor = Color.DarkGreen;
+                            Information_container.AppendText("New playlist!" + Environment.NewLine);
+                            Information_container.SelectionColor = Color.Black;
+                        }
                         result.Add(url.Url);
                         total += 1;
                     }
-                    Information_container.SelectionColor = Color.DarkGreen;
-                    Information_container.AppendText("Nowa playlista!" + Environment.NewLine);
-                    Information_container.SelectionColor = Color.Black;
+                    
                 }
                 downloadComplete = true;
                 string[] new_playlist = result.ToArray();
                 Information_container.SelectionColor = Color.DarkGreen;
-                Information_container.AppendText("Rozmiar połączonej playlisty: " + total.ToString() + Environment.NewLine);
+                if (Variables.language == "PL")
+                    Information_container.AppendText("Rozmiar połączonej playlisty: " + total.ToString() + Environment.NewLine);
+                else
+                    Information_container.AppendText("Combined playlist size: " + total.ToString() + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
                 Variables.total = total.ToString();
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                else
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 foreach (var url in new_playlist)
                 {
                     await Task.Run(() => StartDownloadAsync(url));
-                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                    if (Variables.language == "PL")
+                        counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    else
+                        counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 }
             }
             else
@@ -513,7 +650,10 @@ namespace NirrayYouTubeDownloader
                 foreach (var playlist_link in lista_linkow_z_playlistami)
                 {
                     Information_container.AppendText(Environment.NewLine);
-                    Information_container.AppendText("Link do playlisty: " + playlist_link);
+                    if (Variables.language == "PL")
+                        Information_container.AppendText("Adres do playlisty: " + playlist_link);
+                    else
+                        Information_container.AppendText("Playlist URL: " + playlist_link);
                     Information_container.AppendText(Environment.NewLine);
                     using (CookieWebClient client = new CookieWebClient())
                     {
@@ -543,13 +683,16 @@ namespace NirrayYouTubeDownloader
                 foreach (var url in new_playlist)
                 {
                     await Task.Run(() => StartDownloadAsync(url));
-                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                    if (Variables.language == "PL")
+                        counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    else
+                        counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 }
             }
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             OpenFileDialog dialog = SelectListToDownloadFrom;
             string playlist_path = "";
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -572,9 +715,18 @@ namespace NirrayYouTubeDownloader
             DownloadListButton.Enabled = false;
             plikToolStripMenuItem.Enabled = false;
             pobieranieToolStripMenuItem.Enabled = false;
-            counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
-            Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
-            Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+            if (Variables.language == "PL")
+            {
+                counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                Can_download_text.Text = "Pomyślnie: " + Variables.can_download.ToString() + "/" + Variables.total;
+                Cannot_download_text.Text = "Niepomyślnie: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+            }
+            else
+            {
+                counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
+                Can_download_text.Text = "Successful: " + Variables.can_download.ToString() + "/" + Variables.total;
+                Cannot_download_text.Text = "Unsuccessful: " + Variables.cannot_download.ToString() + "/" + Variables.total;
+            }
             RunDownloadForEachURL(lines);
         }
         private async void RunDownloadForEachURL(string[] toDownload)
@@ -587,7 +739,7 @@ namespace NirrayYouTubeDownloader
 
         private async void RunDownloadForPlaylist(string playlist_url)
         {
-            if (AlternativeParser.Checked == false)
+            if (alternativeSquadToolStripMenuItem.Checked == false)
             {
                 var youtube = new YoutubeClient();
                 var playlist_metadata = await youtube.Playlists.GetAsync(playlist_url);
@@ -601,21 +753,38 @@ namespace NirrayYouTubeDownloader
 
                 foreach (var url in playlistVideos)
                 {
-                    Information_container.SelectionColor = Color.DarkGreen;
-                    Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
-                    Information_container.SelectionColor = Color.DarkGreen;
-                    Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
-                    Information_container.SelectionColor = Color.Black;
+                    if (Variables.language == "PL")
+                    {
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Title + "]" + " > Playlista." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.Black;
+                    }
+                    else
+                    {
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Title + "]" + " > Playlist." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.DarkGreen;
+                        Information_container.AppendText("[" + url.Url + "]" + " > Playlist." + Environment.NewLine);
+                        Information_container.SelectionColor = Color.Black;
+                    }
                     temp_playlist.Add(url.Url);
                 }
                 downloadComplete = true;
                 string[] new_playlist2 = temp_playlist.ToArray();
                 Variables.total = new_playlist2.Length.ToString();
-                counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                if (Variables.language == "PL")
+                    counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                else
+                    counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 foreach (var url in new_playlist2)
                 {
                     await Task.Run(() => StartDownloadAsync(url));
-                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                    if (Variables.language == "PL")
+                        counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    else
+                        counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 }
             }
             else
@@ -648,13 +817,16 @@ namespace NirrayYouTubeDownloader
                 foreach (var url in new_playlist)
                 {
                     await Task.Run(() => StartDownloadAsync(url));
-                    counter.Text = "Stan: " + Variables.left.ToString() + "/" + Variables.total;
+                    if (Variables.language == "PL")
+                        counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
+                    else
+                        counter.Text = "Current: " + Variables.left.ToString() + "/" + Variables.total;
                 }
             }
-            
-        
+
+
         }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         private void DownloadFromDirectLink_Click(object sender, EventArgs e)
         {
@@ -665,10 +837,16 @@ namespace NirrayYouTubeDownloader
                 {
                     string url = DirectUrlContainer.Text;
                     url.ToLower();
-                    Information_container.AppendText("[" + localDate + "]" + " > Pozyskiwanie zawartości." + Environment.NewLine);
+                    if (Variables.language == "PL")
+                        Information_container.AppendText("[" + localDate + "]" + " > Pozyskiwanie zawartości." + Environment.NewLine);
+                    else
+                        Information_container.AppendText("[" + localDate + "]" + " > Getting data." + Environment.NewLine);
                     if (!url.Contains("youtube"))
                     {
-                        Progress_text.Text = "Adres do pobrania nie jest odnośnikiem do serwisu YouTube.";
+                        if (Variables.language == "PL")
+                            Progress_text.Text = "Adres do pobrania nie jest odnośnikiem do serwisu YouTube.";
+                        else
+                            Progress_text.Text = "The download URL is not a link to YouTube.";
 
                     }
                     else if (url.Contains("playlist"))
@@ -708,7 +886,10 @@ namespace NirrayYouTubeDownloader
                 try
                 {
                     var playlists = UserPlaylist.Text.Split('\n').ToList();
-                    Information_container.AppendText("[" + localDate + "]" + " > Pozyskiwanie zawartości." + Environment.NewLine);
+                    if (Variables.language == "PL")
+                        Information_container.AppendText("[" + localDate + "]" + " > Pozyskiwanie zawartości." + Environment.NewLine);
+                    else
+                        Information_container.AppendText("[" + localDate + "]" + " > Getting data." + Environment.NewLine);
                     string[] new_playlist = playlists.ToArray();
                     CreateBigList(new_playlist);
                 }
@@ -735,7 +916,7 @@ namespace NirrayYouTubeDownloader
             {
                 Variables.appPath = Application.StartupPath;
             }
-            
+
         }
 
         private void DirectUrlContainer_DoubleClick(object sender, EventArgs e)
@@ -745,8 +926,16 @@ namespace NirrayYouTubeDownloader
 
         private void informacjeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            About_Window About = new About_Window();
-            About.ShowDialog();
+            if (Variables.language == "PL")
+            {
+                About_Window About = new About_Window();
+                About.ShowDialog();
+            }
+            else
+            {
+                About_window_ENG AboutEng = new About_window_ENG();
+                AboutEng.ShowDialog();
+            }
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
@@ -770,20 +959,26 @@ namespace NirrayYouTubeDownloader
 
         private void PauseButton_Click(object sender, EventArgs e)
         {
-            if (progressBar1.Value == 100 &! Variables.left.Equals(Variables.total) && PauseButton.Text == "Kontynuuj")
+            if (progressBar1.Value == 100 & !Variables.left.Equals(Variables.total) && (PauseButton.Text == "Kontynuuj" || PauseButton.Text == "Continue"))
             {
                 downloadComplete = true;
             }
             if (Variables.status == 0)
             {
                 Variables.status = 3;
-                PauseButton.Text = "Kontynuuj";
+                if (Variables.language == "PL")
+                    PauseButton.Text = "Kontynuuj";
+                else
+                    PauseButton.Text = "Continue";
                 return;
             }
             else
             {
                 Variables.status = 0;
-                PauseButton.Text = "Wstrzymaj";
+                if (Variables.language == "PL")
+                    PauseButton.Text = "Wstrzymaj";
+                else
+                    PauseButton.Text = "Pause";
                 return;
             }
         }
@@ -822,7 +1017,15 @@ namespace NirrayYouTubeDownloader
 
         private void Information_container_DoubleClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(Information_container.Text);
+            try
+            {
+
+                Clipboard.SetText(Information_container.Text);
+            }
+            catch (System.ArgumentNullException)
+            {
+                Clipboard.SetText(" ");
+            }
         }
 
         private void Information_container_TextChanged(object sender, EventArgs e)
@@ -830,6 +1033,7 @@ namespace NirrayYouTubeDownloader
             // set the current caret position to the end
             Information_container.SelectionStart = Information_container.Text.Length;
             // scroll it automatically
+
             Information_container.ScrollToCaret();
         }
 
@@ -872,7 +1076,10 @@ namespace NirrayYouTubeDownloader
             if (variable)
             {
                 Variables.status = 0;
-                PauseButton.Text = "Wstrzymaj";
+                if (Variables.language == "PL")
+                    PauseButton.Text = "Wstrzymaj";
+                else
+                    PauseButton.Text = "Pause";
                 speedDownloadToolStripMenuItem.Checked = true;
                 ToolBox_ConvertToMp3.Enabled = false;
                 speedimage.Visible = true;
@@ -1141,7 +1348,92 @@ namespace NirrayYouTubeDownloader
             }
         }
 
-        
+        private void alternativeSquadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Lang_Polish_Click(object sender, EventArgs e)
+        {
+            Variables.language = "PL";
+            ToolTip.Active = true;
+            Lang_English.Checked = false;
+            Lang_Polish.Checked = true;
+            translateToolStripMenuItem.Text = "Język";
+            plikToolStripMenuItem.Text = "Plik";
+            pobieranieToolStripMenuItem.Text = "Pobieranie";
+            pomocToolStripMenuItem.Text = "Pomoc";
+            ToolBox_ConvertToMp3.Text = "Automatycznie konwertuj do MP3";
+            mp3_always_best.Text = "Zawsze najlepsza jakość";
+            usuwajPlikiŹródłoweToolStripMenuItem.Text = "Usuwaj pliki źródłowe po pomyślnej konwersji";
+            ToolBox_NewLocation.Text = "Wybierz inną lokalizacje zapisu";
+            ToolBox_DoNotDownloadAlready.Text = "Nie pobieraj istniejących już plików";
+            countPlaylistDiscSpaceToolStripMenuItem.Text = "Przelicz rozmiar przed pobraniem";
+            speedDownloadToolStripMenuItem.Text = "Szybkie pobieranie";
+            turboNoLimitToolStripMenuItem.Text = "Bez limitu";
+            toolStripMenuItem2.Text = "5 jednocześnie";
+            tenToolStripMenuItem.Text = "10 jednocześnie";
+            twenToolStripMenuItem.Text = "20 jednocześnie";
+            thirToolStripMenuItem.Text = "30 jednocześnie";
+            własneUstawieniaToolStripMenuItem.Text = "Własne ustawienia";
+            alternativeSquadToolStripMenuItem.Text = "Alternatywna składnia dla parsowania playlist (videoId)";
+            informacjeToolStripMenuItem.Text = "Informacje";
+            GitHubError.Text = "Zgłoś błąd";
+            groupBox1.Text = "Stan";
+            counter.Text = "Aktualny:";
+            Can_download_text.Text = "Pomyślnie:";
+            Cannot_download_text.Text = "Niepomyślnie:";
+            DownloadFromDirectLink.Text = "Pobierz";
+            PauseButton.Text = "Wstrzymaj";
+            DownloadListButton.Text = "Pobierz z pliku tekstowego";
+            speedtext.Text = "Szybkie pobieranie załączone";
+            groupBox2.Text = "Adresy";
+            Checkbox_UseUrl.Text = "Adres do pobrania";
+            Checkbox_UseCombine.Text = "Połącz playlisty";
+            backgroundthreads.Text = "Aktualnie w tle:";
+            maxsizeof.Text = "Rozmiar:";
+        }
+
+        private void Lang_English_Click(object sender, EventArgs e)
+        {
+            Variables.language = "ENG";
+            ToolTip.Active = false;
+            Lang_English.Checked = true;
+            Lang_Polish.Checked = false;
+            translateToolStripMenuItem.Text = "Language";
+            plikToolStripMenuItem.Text = "File";
+            pobieranieToolStripMenuItem.Text = "Download";
+            pomocToolStripMenuItem.Text = "Help";
+            ToolBox_ConvertToMp3.Text = "Automatically convert to MP3";
+            mp3_always_best.Text = "Always the best audio quality";
+            usuwajPlikiŹródłoweToolStripMenuItem.Text = "Remove source files after successful conversion";
+            ToolBox_NewLocation.Text = "Select a different save location";
+            ToolBox_DoNotDownloadAlready.Text = "Skip existing files";
+            countPlaylistDiscSpaceToolStripMenuItem.Text = "Check total size before start";
+            speedDownloadToolStripMenuItem.Text = "Asynchronous download";
+            turboNoLimitToolStripMenuItem.Text = "No limits";
+            toolStripMenuItem2.Text = "5 at once";
+            tenToolStripMenuItem.Text = "10 at once";
+            twenToolStripMenuItem.Text = "20 at once";
+            thirToolStripMenuItem.Text = "30 at once";
+            własneUstawieniaToolStripMenuItem.Text = "Custom";
+            alternativeSquadToolStripMenuItem.Text = "Alternative syntax for parsing playlists (videoId)";
+            informacjeToolStripMenuItem.Text = "About";
+            GitHubError.Text = "Report the problem";
+            groupBox1.Text = "State";
+            counter.Text = "Current:";
+            Can_download_text.Text = "Successful:";
+            Cannot_download_text.Text = "Unsuccessful:";
+            DownloadFromDirectLink.Text = "Download";
+            PauseButton.Text = "Pause";
+            DownloadListButton.Text = "Download from text file";
+            speedtext.Text = "Asynchronous download";
+            groupBox2.Text = "URL";
+            Checkbox_UseUrl.Text = "Video link";
+            Checkbox_UseCombine.Text = "Combine playlists";
+            backgroundthreads.Text = "Background download:";
+            maxsizeof.Text = "Size:";
+        }
     }
     
 }

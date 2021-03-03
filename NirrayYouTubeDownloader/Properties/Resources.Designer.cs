@@ -83,6 +83,16 @@ namespace NirrayYouTubeDownloader.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap english_language_clip_art_14749 {
+            get {
+                object obj = ResourceManager.GetObject("english_language_clip_art_14749", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
@@ -146,6 +156,16 @@ namespace NirrayYouTubeDownloader.Properties {
         internal static System.Drawing.Bitmap opus_logo_imageonly {
             get {
                 object obj = ResourceManager.GetObject("opus-logo-imageonly", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap polish_flag_small {
+            get {
+                object obj = ResourceManager.GetObject("polish-flag-small", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

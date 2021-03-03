@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace NirrayYouTubeDownloader
 {
-    public partial class About_Window : Form
+    public partial class About_window_ENG : Form
     {
-        public About_Window()
+        public About_window_ENG()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -40,15 +45,6 @@ namespace NirrayYouTubeDownloader
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://opus-codec.org/development/");
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void About_Window_Load(object sender, EventArgs e)
-        {
         }
     }
 }
