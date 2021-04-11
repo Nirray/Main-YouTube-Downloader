@@ -4,14 +4,14 @@ You can download audio from direct link or from whole playlist and even combine 
 There's also feature to download files asynchronously with high speed :tada:.
 * English and Polish language available
 
-# Current build (03.03.2021)
+# Current build (11.04.2021)
 :fast_forward:[Google Drive](https://drive.google.com/file/d/1eTP_kPjIrV_J11nO7aOgR8QkLrYrV1A8/view?usp=sharing)
 
 SHA256: 
-* 0CCAA35E18C75B6909BE076824FE0E57CAF843AB57F64199915334DDA2D7D156
+* A5D81E05D0DFBF00AD10896B366AF9A0871F08982D521CD620B791DCB9887A86
 
 MD5: 
-* B73CFE79498828C5C9BEE7A1FB64F49F
+* A131B839EC06F4830ED5F8A32552DBAB
 
 
 # Source Compilation
