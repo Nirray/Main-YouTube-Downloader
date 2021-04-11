@@ -181,7 +181,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(264, 13);
             this.label6.TabIndex = 16;
-            this.label6.Text = "~ Nirray - Ostatnia aktualizacja: 03.02.2021 v 1.1.17";
+            this.label6.Text = "~ Nirray - Ostatnia aktualizacja: 11.04.2021 v 1.1.18";
             // 
             // pictureBox5
             // 

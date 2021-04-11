@@ -59,9 +59,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.GrayText;
             this.label6.Location = new System.Drawing.Point(12, 236);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(231, 13);
+            this.label6.Size = new System.Drawing.Size(231, 26);
             this.label6.TabIndex = 33;
-            this.label6.Text = "~ Nirray - Latest update: 03.03.2021 v 1.1.17";
+            this.label6.Text = "~ Nirray - Latest update: 11.04.2021 v 1.1.18\r\n\r\n";
             // 
             // button1
             // 
