@@ -75,6 +75,10 @@ namespace NirrayYouTubeDownloader
                 else
                     Information_container.AppendText("Successfully created MP3 file: " + filename + ".mp3" + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 if (PauseButton.Text == "Wstrzymaj" || PauseButton.Text == "Pause")
                 {
                     Variables.status = 0;
@@ -235,6 +239,10 @@ namespace NirrayYouTubeDownloader
                                 Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Wygląda na to, że plik jest uszkodzony." + Environment.NewLine);
                             else
                                 Information_container.AppendText("[" + localDate + "]" + " > " + title + " > Corrupted file." + Environment.NewLine);
+                            Information_container.SelectionStart = Information_container.Text.Length;
+                            // scroll it automatically
+
+                            Information_container.ScrollToCaret();
                             Variables.total_size_download += streamInfo.Size.TotalBytes;
                             whatsize.Text = "" + SizeSuffix(Variables.total_size_download).ToString();
                             client.DownloadFileAsync(new Uri(streamInfo.Url), path);
@@ -275,6 +283,10 @@ namespace NirrayYouTubeDownloader
                     }
                 }
                 Information_container.AppendText("[" + localDate + "]" + " > " + title + Environment.NewLine);
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 if (speedimage.Visible == true)
                 {
                     downloadComplete = true;
@@ -353,6 +365,10 @@ namespace NirrayYouTubeDownloader
                 else
                     Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "This video is not available in your country." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 if (Variables.language == "PL")
                     Progress_text.Text = "Ten film nie jest dostępny w Twoim kraju.";
                 else
@@ -387,6 +403,10 @@ namespace NirrayYouTubeDownloader
                 else
                     Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + "> " + "File cannot be retrieved from this IP address." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 if (Variables.language == "PL")
                     Progress_text.Text = "Nie można pobrać tego pliku z tego adresu IP.";
                 else
@@ -421,6 +441,10 @@ namespace NirrayYouTubeDownloader
                     Information_container.AppendText("[" + localDate + "]" + " > " + Variables.current_title + " not available." + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
                 Information_container.AppendText(e.ToString());
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 if (Variables.language == "PL")
                     Progress_text.Text = "Wystąpił błąd przy próbie pozyskania zawartości bezpośrednio z YouTube.";
                 else
@@ -494,6 +518,10 @@ namespace NirrayYouTubeDownloader
                     Information_container.SelectionColor = Color.DarkGreen;
                     Information_container.AppendText("[" + localDate + "]" + " > " + title + " > pomyślnie zapisano plik." + Environment.NewLine);
                     Information_container.SelectionColor = Color.Black;
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                     progressBar1.Value = 100;
                 }
                 else
@@ -504,6 +532,10 @@ namespace NirrayYouTubeDownloader
                     Information_container.SelectionColor = Color.DarkGreen;
                     Information_container.AppendText("[" + localDate + "]" + " > " + title + " > successfully saved the file." + Environment.NewLine);
                     Information_container.SelectionColor = Color.Black;
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                     progressBar1.Value = 100;
                 }
             });
@@ -514,6 +546,10 @@ namespace NirrayYouTubeDownloader
                     Information_container.AppendText("[" + localDate + "]" + " > " + title + " > konwertowanie do MP3 w toku." + Environment.NewLine);
                 else
                     Information_container.AppendText("[" + localDate + "]" + " > " + title + " > converting to MP3 in progress." + Environment.NewLine);
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 NewWayToConvertMp3(title, extension);
                 DownloadFromDirectLink.Enabled = false;
                 DownloadListButton.Enabled = false;
@@ -605,6 +641,10 @@ namespace NirrayYouTubeDownloader
                             Information_container.SelectionColor = Color.DarkGreen;
                             Information_container.AppendText("Nowa playlista!" + Environment.NewLine);
                             Information_container.SelectionColor = Color.Black;
+                            Information_container.SelectionStart = Information_container.Text.Length;
+                            // scroll it automatically
+
+                            Information_container.ScrollToCaret();
                         }
                         else
                         {
@@ -616,6 +656,10 @@ namespace NirrayYouTubeDownloader
                             Information_container.SelectionColor = Color.DarkGreen;
                             Information_container.AppendText("New playlist!" + Environment.NewLine);
                             Information_container.SelectionColor = Color.Black;
+                            Information_container.SelectionStart = Information_container.Text.Length;
+                            // scroll it automatically
+
+                            Information_container.ScrollToCaret();
                         }
                         result.Add(url.Url);
                         total += 1;
@@ -630,6 +674,10 @@ namespace NirrayYouTubeDownloader
                 else
                     Information_container.AppendText("Combined playlist size: " + total.ToString() + Environment.NewLine);
                 Information_container.SelectionColor = Color.Black;
+                Information_container.SelectionStart = Information_container.Text.Length;
+                // scroll it automatically
+
+                Information_container.ScrollToCaret();
                 Variables.total = total.ToString();
                 if (Variables.language == "PL")
                     counter.Text = "Aktualny: " + Variables.left.ToString() + "/" + Variables.total;
@@ -655,6 +703,10 @@ namespace NirrayYouTubeDownloader
                     else
                         Information_container.AppendText("Playlist URL: " + playlist_link);
                     Information_container.AppendText(Environment.NewLine);
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                     using (CookieWebClient client = new CookieWebClient())
                     {
                         string htmlCode = client.DownloadString(playlist_link);
@@ -670,6 +722,10 @@ namespace NirrayYouTubeDownloader
                             nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
                             Information_container.AppendText(nirray_parse_youtubeID);
                             Information_container.AppendText(Environment.NewLine);
+                            Information_container.SelectionStart = Information_container.Text.Length;
+                            // scroll it automatically
+
+                            Information_container.ScrollToCaret();
                             downloadComplete = true;
                             result.Add("https://www.youtube.com/watch?v=" + nirray_parse_youtubeID);
                             //await Task.Run(() => StartDownloadAsync("https://www.youtube.com/watch?v="+ nirray_parse_youtubeID));
@@ -760,6 +816,10 @@ namespace NirrayYouTubeDownloader
                         Information_container.SelectionColor = Color.DarkGreen;
                         Information_container.AppendText("[" + url.Url + "]" + " > Playlista." + Environment.NewLine);
                         Information_container.SelectionColor = Color.Black;
+                        Information_container.SelectionStart = Information_container.Text.Length;
+                        // scroll it automatically
+
+                        Information_container.ScrollToCaret();
                     }
                     else
                     {
@@ -768,6 +828,10 @@ namespace NirrayYouTubeDownloader
                         Information_container.SelectionColor = Color.DarkGreen;
                         Information_container.AppendText("[" + url.Url + "]" + " > Playlist." + Environment.NewLine);
                         Information_container.SelectionColor = Color.Black;
+                        Information_container.SelectionStart = Information_container.Text.Length;
+                        // scroll it automatically
+
+                        Information_container.ScrollToCaret();
                     }
                     temp_playlist.Add(url.Url);
                 }
@@ -805,6 +869,10 @@ namespace NirrayYouTubeDownloader
                         nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
                         Information_container.AppendText(nirray_parse_youtubeID);
                         Information_container.AppendText(Environment.NewLine);
+                        Information_container.SelectionStart = Information_container.Text.Length;
+                        // scroll it automatically
+
+                        Information_container.ScrollToCaret();
                         downloadComplete = true;
                         result.Add("https://www.youtube.com/watch?v=" + nirray_parse_youtubeID);
                         //await Task.Run(() => StartDownloadAsync("https://www.youtube.com/watch?v="+ nirray_parse_youtubeID));
@@ -841,6 +909,10 @@ namespace NirrayYouTubeDownloader
                         Information_container.AppendText("[" + localDate + "]" + " > Pozyskiwanie zawartości." + Environment.NewLine);
                     else
                         Information_container.AppendText("[" + localDate + "]" + " > Getting data." + Environment.NewLine);
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                     if (!url.Contains("youtube"))
                     {
                         if (Variables.language == "PL")
@@ -874,6 +946,10 @@ namespace NirrayYouTubeDownloader
                         Information_container.AppendText(Environment.NewLine);
                         Information_container.AppendText(url.ToString());
                         Information_container.AppendText(Environment.NewLine);
+                        Information_container.SelectionStart = Information_container.Text.Length;
+                        // scroll it automatically
+
+                        Information_container.ScrollToCaret();
                         StartDownloadAsync(url);
                     }
                 }
@@ -891,6 +967,10 @@ namespace NirrayYouTubeDownloader
                     else
                         Information_container.AppendText("[" + localDate + "]" + " > Getting data." + Environment.NewLine);
                     string[] new_playlist = playlists.ToArray();
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                     CreateBigList(new_playlist);
                 }
                 catch (System.Reflection.TargetInvocationException)
@@ -1344,6 +1424,10 @@ namespace NirrayYouTubeDownloader
                     nirray_parse_youtubeID = nirray_parse_youtubeID.Replace("\"videoId\":\"", "");
                     Information_container.AppendText(nirray_parse_youtubeID);
                     Information_container.AppendText(Environment.NewLine);
+                    Information_container.SelectionStart = Information_container.Text.Length;
+                    // scroll it automatically
+
+                    Information_container.ScrollToCaret();
                 }
             }
         }
