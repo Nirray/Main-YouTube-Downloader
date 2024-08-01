@@ -1,5 +1,5 @@
 # YouTube Downloader
-Simple but efficient :fire: .NET Framework application for downloading YouTube audio and converting it to MP3 file.
+Simple but efficient C# | .NET Framework application for downloading YouTube audio and converting it to MP3 file.
 You can download audio from direct link or from whole playlist and even combine playlists into big download list.
 There's also feature to download files asynchronously with high speed :tada:.
 * English and Polish language available
