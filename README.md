@@ -22,20 +22,6 @@ You can compile it from official open source or download already compiled ones (
 # Important
 Please place ffmpeg.exe and ffprobe.exe in "lib" path inside application startup directory.
 
-# Interface
-![Main](http://nirray.bplaced.net/Download/Github/ytd/1.png)
-![Main](http://nirray.bplaced.net/Download/Github/ytd/2.png)
-![Language](http://nirray.bplaced.net/Download/Github/ytd/3.png)
-
-Download from playlists:
-
-![DownloadComplete](http://nirray.bplaced.net/Download/Github/ytd/5.png)
-
-About and credits:
-
-![About](http://nirray.bplaced.net/Download/Github/ytd/about.png)
-
-
 
 # Used repositories:
 [YouTubeExplode](https://github.com/Tyrrrz/YoutubeExplode)
